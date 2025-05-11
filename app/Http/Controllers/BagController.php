@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class BagController extends Controller
 {
+
     public function add(Request $request)
     {
         if (!Auth::check()) {

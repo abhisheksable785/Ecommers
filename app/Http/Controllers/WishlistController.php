@@ -30,7 +30,7 @@ class WishlistController extends Controller
 
     public function viewWishlist()
     {
-        $wishlist = auth()->user()->wishlist;
-        return view('page.wishlist_index', compact('wishlist'));
+        $wishlists = auth()->user()->wishlist;
+        return view('page.wishlist', compact('wishlists'));
     }
 }

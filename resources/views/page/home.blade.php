@@ -57,7 +57,7 @@
         <div class="row">
             @foreach ($categories as $category)
                 <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-                    <div class="card text-center border-0 shadow-sm" style="background-color: #ffe4c4; border-radius: 12px;">
+                    <div class="card text-center border-0 shadow-sm" style="background-color: #CDCDCDFF; border-radius: 12px;">
                         <div class="card-body p-2 d-flex flex-column align-items-center">
                             {{-- Category Image --}}
                             <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
@@ -73,9 +73,9 @@
                             </b>
 
                             {{-- Shop Now --}}
-                            <h3 href="" class="text-primary fw-medium" style="font-size: 13px;">
-                                Shop Now
-                            </h3>
+                           <h2 href="" class="text-primary fw-medium" style="font-size: 13px; font-weight: 700 ">
+                               SHOP NOW
+                            </h2>
                         </div>
                     </div>
                 </div>

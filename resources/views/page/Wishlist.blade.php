@@ -10,8 +10,15 @@
         </svg>
 
         {{-- Message --}}
+        @if(!$wishlist)
         <h3 class="text-muted">Your Wishlist is Empty!</h3>
         <p class="text-secondary">Add products to your wishlist to keep track of what you love.</p>
+        @endif
+
+       @foreach ($wishlists as $wishlist )
+
+        
+       @endforeach
 
         {{-- Call-to-Action --}}
         <a href="shop" class="btn btn-outline-danger mt-3">
