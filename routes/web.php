@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get("/dashboard", function () {
     return view("admin.dashboard");
 });
+Route::fallback(function () {
+    return view("page.404");
+});
 
 ///front
 ///front
@@ -48,7 +51,7 @@ Route::get("/orders", function () {
     return view("page.orders");
 });
 Route::get("/wishlist", function () {
-    return view("page.Wishlist");
+    return view("page.wishlist");
 });
 Route::get("/gift", function () {
     return view("page.gift");
@@ -78,7 +81,7 @@ Route::controller(Controller::class)->group(function(){
 Route::controller(CategoryController::class)->group(function(){
     Route::get('/category',  'index')->name('category.list');
     Route::get('/category/view/{id}',  'view')->name('category.view');
-    Route::get('/category/add', function () { return view('admin.category.add-cat');})->name('category.add');
+    Route::view('/category/add',  'admin.category.add-cat')->name('category.add');
     Route::post('/category/store', 'store')->name('category.store');
     Route::get('/category/edit/{id}', 'edit')->name('category.edit');
     Route::post('/category/update/{id}',  'update')->name('category.update');
@@ -101,7 +104,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products/{id}', 'show')->name('products.show');
     Route::get('/category/{id}','categoryProducts')->name('category.products');
     Route::get('category-data', 'index');
-    Route::get('/shop',  'shop');
+    Route::get('/shop',  'shop')->name('shop');
     Route::get('/catproducts/{id}', 'categoryProducts')->name('category.products');
     Route::get('/product/{id}',  'product_details')->name('details.show');
 });
@@ -133,8 +136,8 @@ Route::get('/users', [AuthController::class, 'index'])->name('users.index');
 Route::middleware('auth')->get('/dashboard', function () {
     return view('admin.dashboard');
 });
-Route::post('/bag/add', [App\Http\Controllers\BagController::class, 'add'])->name('bag.add');
-Route::post('/wishlist/add', [App\Http\Controllers\WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/bag/add', [BagController::class, 'add'])->name('bag.add');
+Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 
 Route::delete('/cart/{id}', [BagController::class, 'remove'])->name('cart.remove');
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');

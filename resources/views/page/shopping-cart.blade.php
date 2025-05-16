@@ -28,9 +28,9 @@
                                     </div>
                                     <div class="product__cart__item__text">
                                         <h6>{{ $item->product->name }}</h6>
-                                        <h5>${{ number_format($item->price_at_purchase, 2) }}</h5>
+                                        <h5> ₹{{ number_format($item->price_at_purchase, 2) }}</h5>
                                         @if($item->size)
-                                            <p>Size: {{ $item->size }}</p>
+                                            <p>Size:  {{ $item->size }}</p>
                                         @endif
                                         @if($item->color)
                                             <p>Color: {{ $item->color }}</p>
@@ -48,7 +48,7 @@
                                     $itemTotal = $item->price_at_purchase * $item->quantity;
                                     $subtotal += $itemTotal;
                                 @endphp
-                                <td class="cart__price">${{ number_format($itemTotal, 2) }}</td>
+                                <td class="cart__price"> ₹{{ number_format($itemTotal, 2) }}</td>
                                 <td class="cart__close">
                                     <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                         @csrf
@@ -91,8 +91,8 @@
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
-                        <li>Subtotal <span>${{ number_format($subtotal, 2) }}</span></li>
-                        <li>Total <span>${{ number_format($subtotal, 2) }}</span></li>
+                        <li>Subtotal <span> ₹{{ number_format($subtotal, 2) }}</span></li>
+                        <li>Total <span> ₹{{ number_format($subtotal, 2) }}</span></li>
                     </ul>
                     <a href="{{ route('checkout') }}" class="primary-btn">Proceed to checkout</a>
                 </div>

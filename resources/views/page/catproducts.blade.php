@@ -25,7 +25,7 @@
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
                                                 @foreach ($categories as $category)
-                                                <li><a href="{{ route('category.products', $category->id) }}">{{ $category->name }}</a>
+                                                <li><a href="{{ route('category.products', $category->id) }}" >{{ $category->name }}</a>
                                                 </li>
                                             @endforeach
                                             </ul>
@@ -65,45 +65,73 @@
                 </div>
 
                 <div class="row">
-                    @foreach ($products as $product)
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg"
-                                     data-setbg={{ asset('storage/' . $product->image) }}>
-                                    <ul class="product__hover">
-                                        <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
-                                        <li><a href="#"><img src="img/icon/compare.png" alt=""><span>Compare</span></a></li>
-                                        <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6>{{ $product->name }}
-                                    </h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
-                                    <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                    <h5>${{ $product->price }}</h5>
-                                    <div class="product__color__select">
-                                        <label for="pc-19">
-                                            <input type="radio" id="pc-19">
-                                        </label>
-                                        <label class="active black" for="pc-20">
-                                            <input type="radio" id="pc-20">
-                                        </label>
-                                        <label class="grey" for="pc-21">
-                                            <input type="radio" id="pc-21">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+    @foreach ($products as $product)
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+            <div class="product__item" style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
+                <div class="product__item__pic set-bg"
+                     data-setbg="{{ asset('storage/' . $product->image) }}"
+                     style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
+                     onclick="window.location.href='{{ route('details.show', $product->id) }}'">
+                     
+                    <div class="product__actions" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
+                        <form action="{{ route('wishlist.add', $product->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" 
+                                    style="border: none; background: rgba(255,255,255,0.95); 
+                                           border-radius: 50%; width: 40px; height: 40px; 
+                                           display: flex; align-items: center; justify-content: center;
+                                           box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
+                                           transform: translateY(0);">
+                                <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist" 
+                                     style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                            </button>
+                        </form>
+                        <a href="simileir" 
+                           style="background: rgba(255,255,255,0.95); border-radius: 50%; 
+                                  width: 40px; height: 40px; display: flex; align-items: center; 
+                                  justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+                                  transition: all 0.2s ease; transform: translateY(0);">
+                            <img src="{{ asset('img/icon/compare.png') }}" alt="compare" 
+                                 style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                        </a>
+                    </div>
                 </div>
+
+                <div class="product__item__text" style="padding: 20px; position: relative;">
+                    <div style="margin-bottom: 12px;">
+                        <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
+                            <a href="{{ route('details.show', $product->id) }}" 
+                               style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
+                                {{ $product->name }}
+                            </a>
+                        </h6>
+                    </div>
+                    <h5 style="color: #3b82f6; font-weight: 700; margin: 0; font-size: 1.25rem;">
+                        ₹{{ number_format($product->price) }}
+                    </h5>
+                </div>
+
+                <!-- Hover Effects -->
+                <style>
+                    .product__item:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                    }
+                    .product__item:hover .product__item__pic {
+                        transform: scale(1.03);
+                    }
+                    button:hover, .product__actions a:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+                    }
+                    .product__item__text a:hover {
+                        color: #3b82f6;
+                    }
+                </style>
+            </div>
+        </div>
+    @endforeach
+</div>
 
                 <div class="row">
                     <div class="col-lg-12">

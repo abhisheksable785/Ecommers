@@ -127,6 +127,7 @@ ol {
 	background-size: cover;
 }
 
+
 .form-card {
 	width: 100%;
 	max-width: 400px;
@@ -1072,9 +1073,49 @@ ol {
 	color: #111111;
 }
 
+.product__pagination {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.product__pagination a,
+.product__pagination span {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid #000;
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.product__pagination a.active {
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.product__pagination a.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+    border-color: #aaa;
+}
+
+.product__pagination span {
+    border: none;
+}
+
+
+
 .product__item {
 	overflow: hidden;
-	margin-bottom: 40px;
+	margin: 0px;
 }
 
 .product__item.sale .product__item__pic .label {
@@ -1292,7 +1333,8 @@ ol {
 -----------------------*/
 
 .shop__sidebar {
-	padding-right: 20px;
+	padding-right: 0px;
+	margin-left: 0px;
 }
 
 .shop__sidebar__search {

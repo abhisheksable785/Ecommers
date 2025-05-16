@@ -30,7 +30,7 @@
                     <th>Category</th>
                     <th>Discription</th>
                     <th>Stock</th>
-                    <th>Actions</th>
+                    <th style="width:250px;">Actions</th>
                 </tr>
             </thead>
             <tbody>                     
@@ -47,10 +47,12 @@
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->stock_quantity }}</td>
                     <td>
-                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm" style="margin-right: 10px" title="View">
+                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm"  title="View">
                             View
                         </a>
-                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    
+                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -61,6 +63,11 @@
                 @endforeach
             </tbody>
         </table>
+        <div
+        class="mt-5">
+    {{ $products->links() }}
+        </div>
+    </div>
     </div>
 </div>
 @endsection

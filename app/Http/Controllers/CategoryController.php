@@ -25,27 +25,27 @@ class CategoryController extends Controller
         return view('admin.category.add-cat');
     }
    
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|unique:tbl_category|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description' => 'nullable|string',
-        ]);
+ public function store(Request $request)
+{
+    $request->validate([
+    'name' => 'required|unique:tbl_category|max:255',
+    'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    'description' => 'nullable|string',
+]);
 
-        // Image Upload
-        $imageName = time().'.'.$request->image->extension();
-        $request->image->move(public_path('uploads/category'), $imageName);
 
-        // Insert into database
-        tbl_category::create([
-            'name' => $request->name,
-            'image' => 'uploads/category/'.$imageName,
-            'description' => $request->description,
-        ]);
+    $imageName = time().'.'.$request->image->extension();
+    $request->image->move(public_path('uploads/category'), $imageName);
 
-        return redirect()->route('category.list')->with('success', 'Category added successfully!');
-    }
+    tbl_category::create([
+        'name' => $request->name,
+        'image' => 'uploads/category/'.$imageName,
+        'description' => $request->description,
+    ]);
+
+    return redirect()->route('category.list')->with('success', 'Category added successfully!');
+}
+
     public function edit($id)
     {
         $category = tbl_category::findOrFail($id);
@@ -58,7 +58,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
         // Update Image if new one is uploaded

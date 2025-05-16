@@ -12,7 +12,11 @@
       href={{ asset ("assets/img/kaiadmin/favicon.ico")}}
       type="image/x-icon"
     />
-
+    <style>
+      nav.w-5{
+        display: none;
+      }
+    </style>
     <!-- Fonts and icons -->
     <script src= {{ asset ("assets/js/plugin/webfont/webfont.min.js")}}></script>
     <script>

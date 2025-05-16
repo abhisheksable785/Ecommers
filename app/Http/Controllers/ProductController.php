@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\tbl_category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection\Paginator;
 
 
 class ProductController extends Controller
@@ -15,7 +16,7 @@ class ProductController extends Controller
  {
     $count = 0;
      $products = Product::join("tbl_category","tbl_product.category","=","tbl_category.id")
-     ->select("tbl_category.name as category_name","tbl_product.*")->get();
+     ->select("tbl_category.name as category_name","tbl_product.*")->paginate(15);
      return view('admin.product.show-product', compact('products','count'));
 
  }
@@ -130,7 +131,7 @@ public function update(Request $request, $id)
 }
 
 public function shop(Request $request){
-    $products = Product::all();
+    $products = Product::paginate(15);
     $categories = tbl_category::all();
     return view ('page.shop',compact('products','categories'));
 

@@ -58,12 +58,12 @@
                                     <div class="card-body">
                                         <div class="shop__sidebar__price">
                                             <ul>
-                                                <li><a href="#">$0.00 - $50.00</a></li>
-                                                <li><a href="#">$50.00 - $100.00</a></li>
-                                                <li><a href="#">$100.00 - $150.00</a></li>
-                                                <li><a href="#">$150.00 - $200.00</a></li>
-                                                <li><a href="#">$200.00 - $250.00</a></li>
-                                                <li><a href="#">250.00+</a></li>
+                                                <li><a href="#">₹0.00 - ₹50.00</a></li>
+                                                <li><a href="#">₹50.00 - ₹100.00</a></li>
+                                                <li><a href="#">₹100.00 - ₹150.00</a></li>
+                                                <li><a href="#">₹150.00 - ₹200.00</a></li>
+                                                <li><a href="#">₹200.00 - ₹250.00</a></li>
+                                                <li><a href="#">₹250.00+</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -187,8 +187,8 @@
                                 <p>Sort by Price:</p>
                                 <select>
                                     <option value="">Low To High</option>
-                                    <option value="">$0 - $55</option>
-                                    <option value="">$55 - $100</option>
+                                    <option value="">₹0 - ₹55</option>
+                                    <option value="">₹55 - ₹100</option>
                                 </select>
                             </div>
                         </div>
@@ -196,54 +196,118 @@
                 </div>
 
                 <div class="row">
-                    @foreach ($products as $product)
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="{{ asset('storage/' . $product->image) }}" 
-                                 style="cursor: pointer;" onclick="window.location.href='{{ route('details.show', $product->id) }}'">
-                                <ul class="product__hover">
-                                    <li>
-                                        <form action="{{ route('wishlist.add', $product->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" style="border: none; background: none; padding: 0;">
-                                                <img src="{{ asset('img/icon/heart.png') }}" alt=""><span>Wishlist</span>
-                                            </button>
-                                        </form>
-                                    </li>
-                                    <li><a href="simileir"><img src="img/icon/compare.png" alt=""><span>Similair</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="{{ route('details.show', $product->id) }}" style="color: black">{{ $product->name }}</a></h6>
-                                <h5>${{ $product->price }}</h5>
-                                <div class="product__color__select">
-                                    <label for="pc-19">
-                                        <input type="radio" id="pc-19">
-                                    </label>
-                                    <label class="active black" for="pc-20">
-                                        <input type="radio" id="pc-20">
-                                    </label>
-                                    <label class="grey" for="pc-21">
-                                        <input type="radio" id="pc-21">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+    @foreach ($products as $product)
+        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+            <div class="product__item" style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
+                <div class="product__item__pic set-bg"
+                     data-setbg="{{ asset('storage/' . $product->image) }}"
+                     style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
+                     onclick="window.location.href='{{ route('details.show', $product->id) }}'">
+                     
+                    <div class="product__actions" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
+                        <form action="{{ route('wishlist.add', $product->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" 
+                                    style="border: none; background: rgba(255,255,255,0.95); 
+                                           border-radius: 50%; width: 40px; height: 40px; 
+                                           display: flex; align-items: center; justify-content: center;
+                                           box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
+                                           transform: translateY(0);">
+                                <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist" 
+                                     style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                            </button>
+                        </form>
+                        <a href="simileir" 
+                           style="background: rgba(255,255,255,0.95); border-radius: 50%; 
+                                  width: 40px; height: 40px; display: flex; align-items: center; 
+                                  justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+                                  transition: all 0.2s ease; transform: translateY(0);">
+                            <img src="{{ asset('img/icon/compare.png') }}" alt="compare" 
+                                 style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                        </a>
                     </div>
-                @endforeach
                 </div>
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="product__pagination">
-                            <a class="active" href="#">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <span>...</span>
-                            <a href="#">21</a>
-                        </div>
+                <div class="product__item__text" style="padding: 20px; position: relative;">
+                    <div style="margin-bottom: 12px;">
+                        <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
+                            <a href="{{ route('details.show', $product->id) }}" 
+                               style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
+                                {{ $product->name }}
+                            </a>
+                        </h6>
                     </div>
+                    <h5 style="color: #3b82f6; font-weight: 700; margin: 0; font-size: 1.25rem;">
+                        ₹{{ number_format($product->price) }}
+                    </h5>
+                   
                 </div>
+
+                <!-- Hover Effects -->
+                <style>
+                    .product__item:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                    }
+                    .product__item:hover .product__item__pic {
+                        transform: scale(1.03);
+                    }
+                    button:hover, .product__actions a:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+                    }
+                    .product__item__text a:hover {
+                        color: #3b82f6;
+                    }
+                </style>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+        <div class="row">
+    <div class="col-lg-12 d-flex justify-content-center">
+        <div class="product__pagination">
+
+            {{-- Previous Button --}}
+            @if ($products->onFirstPage())
+                <a class="disabled" href="#">&lt;</a>
+            @else
+                <a href="{{ $products->previousPageUrl() }}">&lt;</a>
+            @endif
+
+            {{-- Page Numbers --}}
+            @php
+                $current = $products->currentPage();
+                $last = $products->lastPage();
+            @endphp
+
+            @for ($i = 1; $i <= $last; $i++)
+                @if ($i == 1 || $i == $last || abs($i - $current) <= 1)
+                    @if ($i == $current)
+                        <a class="active" href="#">{{ $i }}</a>
+                    @else
+                        <a href="{{ $products->url($i) }}">{{ $i }}</a>
+                    @endif
+                @elseif ($i == 2 && $current > 3)
+                    <span>...</span>
+                @elseif ($i == $last - 1 && $current < $last - 2)
+                    <span>...</span>
+                @endif
+            @endfor
+
+            {{-- Next Button --}}
+            @if ($products->hasMorePages())
+                <a href="{{ $products->nextPageUrl() }}">&gt;</a>
+            @else
+                <a class="disabled" href="#">&gt;</a>
+            @endif
+
+        </div>
+    </div>
+</div>
+
+
             </div>
         </div>
     </div>

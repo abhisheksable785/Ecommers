@@ -52,17 +52,18 @@
 <!-- Hero Section End -->
 
   <!-- Banner Section Begin -->
-  <section class="category-grid py-5">
-    <div class="container">
-        <div class="row">
+  <section class="category-grid py-5" style="background-color: #dcdad3">
+    <div class="container" >
+        <div class="row" >
+            
             @foreach ($categories as $category)
-                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-                    <div class="card text-center border-0 shadow-sm" style="background-color: #CDCDCDFF; border-radius: 12px;">
-                        <div class="card-body p-2 d-flex flex-column align-items-center">
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4" >
+                    <div class="card text-center border-0 shadow-sm" >
+                        <div class="card-body p-2 d-flex flex-column align-items-center" style="background-color: rgb(255, 255, 255); border-radius: 12px; box-shadow: 3px 5px 6px #000;">
                             {{-- Category Image --}}
                             <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
                                 class="img-fluid mb-2 rounded"
-                                style="height: 160px; object-fit: cover; width: 100%; border-radius: 10px;">
+                                style="height: 160px; object-fit: contain; width: 100%; border-radius: 10px;">
 
                             {{-- Category Name --}}
                             <h6 class="fw-semibold text-dark mb-1">{{ $category->name }}</h6>

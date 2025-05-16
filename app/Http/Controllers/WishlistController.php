@@ -24,7 +24,6 @@ class WishlistController extends Controller
     {
         $user = auth()->user();
         $user->wishlist->detach($productId);
-
         return back()->with('success', 'Product removed from wishlist!');
     }
 

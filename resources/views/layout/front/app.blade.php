@@ -48,16 +48,16 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li class="active"><a href="/">Home</a></li>
-                            <li><a href="shop">Shop</a></li>
+                            <li><a href="{{ route('shop') }}">Shop</a></li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="about">About Us</a></li>
-                                    <li><a href="cart">Shopping Cart</a></li>
-                                    <li><a href="bill">Check Out</a></li>
+                                    <li><a href="{{ route('cart') }}">Shopping Cart</a></li>
+                                    <li><a href="{{ route('checkout') }}">Check Out</a></li>
                                 
                                 </ul>
                             </li>
-                            <li><a href="blog">Blog</a></li>
+                            <li><a href="">Blog</a></li>
                             <li><a href="contact">Contacts</a></li>
                             <li></li>
                             <li></li>
