@@ -21,6 +21,11 @@
                 <label class="form-label">Product Image</label>
                 <input type="file" name="image" class="form-control" accept="image/*" required>
             </div>
+                  <div class="mb-3">
+    <label class="form-label">Gallery Images</label>
+    <input type="file" name="pics[]" class="form-control" accept="image/*" multiple>
+</div>
+
 
             <div class="mb-3">
                 <label class="form-label">Price (₹)</label>

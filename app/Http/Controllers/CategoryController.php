@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\tbl_category;
 use App\Models\tbl_contact;
 use Illuminate\Http\Request;
@@ -70,7 +71,6 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->description = $request->description;
         $category->save();
-
         return redirect()->route('category.list')->with('success', 'Category updated successfully!');
     }
     public function view($id)
@@ -92,10 +92,12 @@ class CategoryController extends Controller
         return redirect()->route('category.list')->with('success', 'Category deleted successfully!');
     }
     public function cathome(){
+        $products = Product::limit(8)->get();
         $categories = tbl_category::all();
-        return view('page.home', compact('categories'));
+        return view('page.home', compact('categories','products'));
 
 
     }
+
 
 }

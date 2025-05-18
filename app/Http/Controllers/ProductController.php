@@ -33,6 +33,11 @@ class ProductController extends Controller
     $product = Product::findOrFail($id);
     return view('page.product-details', compact('product'));
 }
+ public function home()
+{
+    $product = Product::all();
+    return view('page.home', compact('product'));
+}
  // Show add product form
  public function create()
  {
@@ -51,12 +56,23 @@ public function store(Request $request)
         'description' => 'nullable|string',
         'category_name' => 'required',
         'stock_quantity' => 'required|integer',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',  
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'pics.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
 
-    
+    // Save main image
     $imagePath = $request->file('image')->store('products', 'public');
 
+    // Save gallery images
+    $galleryPaths = [];
+    if ($request->hasFile('pics')) {
+        foreach ($request->file('pics') as $pic) {
+            $picPath = $pic->store('products/gallery', 'public');
+            $galleryPaths[] = $picPath;
+        }
+    }
+
+    // Save product
     $product = new Product();
     $product->name = $request->name;
     $product->price = $request->price;
@@ -64,11 +80,13 @@ public function store(Request $request)
     $product->description = $request->description;
     $product->category = $request->category_name;
     $product->stock_quantity = $request->stock_quantity;
-    $product->image = $imagePath; 
+    $product->image = $imagePath;
+    $product->pics = json_encode($galleryPaths); // Save as JSON
     $product->save();
 
     return redirect()->route('products.index')->with('success', 'Product added successfully!');
 }
+
 
  
  public function edit($id)
@@ -80,21 +98,49 @@ public function store(Request $request)
 
 public function update(Request $request, $id)
 {
+    
     $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
         'description' => 'nullable|string',
         'category' => 'required|exists:tbl_category,id',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'pics.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         'gender' => 'required|in:Men,Women,Unisex',
         'stock_quantity' => 'required|integer|min:0',
     ]);
 
     $product = Product::findOrFail($id);
+    if ($request->has('remove_pics')) {
+    $removeIndexes = explode(',', $request->remove_pics);
+    $existingPics = json_decode($product->pics, true) ?: [];
+
+    // Remove images by index
+    foreach ($removeIndexes as $idx) {
+        if (isset($existingPics[$idx])) {
+            // Optionally, delete the file from storage here if needed:
+            // Storage::disk('public')->delete($existingPics[$idx]);
+
+            unset($existingPics[$idx]);
+        }
+    }
+
+    // Reindex array and save
+    $existingPics = array_values($existingPics);
+    $product->pics = json_encode($existingPics);
+}
+
 
     if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('products', 'public');
-        $product->image = $imagePath;
+        $product->image = $request->file('image')->store('products', 'public');
+    }
+
+    // Append new gallery images to existing ones
+    $existingPics = json_decode($product->pics, true) ?? [];
+    if ($request->hasFile('pics')) {
+        foreach ($request->file('pics') as $pic) {
+            $existingPics[] = $pic->store('products/gallery', 'public');
+        }
     }
 
     $product->name = $request->name;
@@ -103,10 +149,12 @@ public function update(Request $request, $id)
     $product->category = $request->category;
     $product->gender = $request->gender;
     $product->stock_quantity = $request->stock_quantity;
+    $product->pics = json_encode($existingPics); // Update gallery
     $product->save();
 
     return redirect()->route('products.index')->with('success', 'Product updated successfully!');
 }
+
 
  
 
@@ -120,20 +168,44 @@ public function update(Request $request, $id)
  }
 
  ////CRUD End
-
- public function categoryProducts($id)
+public function categoryProducts($id, Request $request)
 {
     $category = tbl_category::findOrFail($id);
-    $products = Product::where('category', $id)->get();
     $categories = tbl_category::all();
+
+    $query = Product::where('category', $id);
+
+    // Sort by price
+    if ($request->sort == 'low_high') {
+        $query->orderBy('price', 'asc');
+    } elseif ($request->sort == 'high_low') {
+        $query->orderBy('price', 'desc');
+    }
+
+    $products = $query->paginate(12)->appends(['sort' => $request->sort]); // keep sort in pagination links
 
     return view('page.catproducts', compact('products', 'categories', 'category'));
 }
 
-public function shop(Request $request){
-    $products = Product::paginate(15);
-    $categories = tbl_category::all();
-    return view ('page.shop',compact('products','categories'));
 
- }
+public function shop(Request $request)
+{
+    $categories = tbl_category::all(); // All categories for sidebar/filter
+
+    $query = Product::query(); // Start product query
+
+    // Sorting Logic
+    if ($request->sort == 'low_high') {
+        $query->orderBy('price', 'asc');
+    } elseif ($request->sort == 'high_low') {
+        $query->orderBy('price', 'desc');
+    }
+
+    // Pagination (12 per page) + Keep 'sort' in links
+    $products = $query->paginate(12)->appends(['sort' => $request->sort]);
+
+    return view('page.shop', compact('products', 'categories'));
+}
+
+
 }

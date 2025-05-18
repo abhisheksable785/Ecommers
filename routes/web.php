@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get("/dashboard", function () {
     return view("admin.dashboard");
 });
-Route::fallback(function () {
-    return view("page.404");
-});
 
 ///front
 ///front
@@ -87,7 +84,7 @@ Route::controller(CategoryController::class)->group(function(){
     Route::post('/category/update/{id}',  'update')->name('category.update');
     Route::delete('/category/delete/{id}', 'destroy')->name('category.destroy');
     Route::get('/shop',  'shop')->name('shop');
-    Route::get('/',  'cathome');
+    Route::get('/',  'cathome')->name('category.home');
 
 
 });
@@ -107,6 +104,9 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/shop',  'shop')->name('shop');
     Route::get('/catproducts/{id}', 'categoryProducts')->name('category.products');
     Route::get('/product/{id}',  'product_details')->name('details.show');
+    Route::get('/search', 'search')->name('product.search');
+
+    // Route::get('/',[ProductController::class, 'home'])->name('products.home');
 });
 
 ///// login & sign Up

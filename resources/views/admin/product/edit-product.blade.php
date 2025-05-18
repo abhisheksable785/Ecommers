@@ -28,6 +28,34 @@
                 <br>
                 <img src="{{ asset('storage/' . $product->image) }}" width="100">
             </div>
+         <div class="mb-3">
+    <label class="form-label">Gallery Images</label>
+    <input type="file" name="pics[]" class="form-control" accept="image/*" multiple>
+    <br>
+    @php
+        $gallery = json_decode($product->pics, true);
+    @endphp
+    @if($gallery)
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            @foreach ($gallery as $index => $img)
+                <div style="position: relative; display: inline-block;">
+                    <img src="{{ asset('storage/' . $img) }}" width="80" height="80" style="object-fit: cover; border: 1px solid #ccc; padding: 2px;">
+
+                    <!-- Cross sign -->
+                    <button type="button" class="remove-img-btn" 
+                        data-img-index="{{ $index }}" 
+                        style="position: absolute; top: -8px; right: -8px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-weight: bold; line-height: 18px;">
+                        &times;
+                    </button>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
+
+<!-- Hidden input to hold indexes of images to remove -->
+<input type="hidden" name="remove_pics" id="remove_pics" value="">
+            
 
             <!-- Price -->
             <div class="mb-3">
@@ -78,3 +106,25 @@
     </div>
 </div>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const removeBtns = document.querySelectorAll('.remove-img-btn');
+        const removePicsInput = document.getElementById('remove_pics');
+        let removedIndexes = [];
+
+        removeBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const imgIndex = this.getAttribute('data-img-index');
+
+                // Add index to removed list if not already added
+                if (!removedIndexes.includes(imgIndex)) {
+                    removedIndexes.push(imgIndex);
+                    removePicsInput.value = removedIndexes.join(',');
+                }
+
+                // Hide the image div
+                this.parentElement.style.display = 'none';
+            });
+        });
+    });
+</script>

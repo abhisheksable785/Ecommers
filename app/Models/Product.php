@@ -18,6 +18,10 @@ class Product extends Model
         'category_name',
         'stock_quantity',
     ];
+    protected $casts = [
+    'pics' => 'array',
+];
+
     public function category()
 {
     return $this->belongsTo(tbl_category::class, 'category');

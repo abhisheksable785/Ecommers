@@ -172,24 +172,23 @@
                             <div class="shop__product__option__left">
 
                                 {{-- 🟡 Category Name Display --}}
-                                @if(isset($category))
-                                <h3 class="mb-2 text-primary">Category: {{ $category->name }}</h3>
-                            @else
-                                <h3 class="mb-2 text-primary">Category: All</h3>
-                            @endif
                             
+                                <p>
+    Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} results
+</p>
 
-                                <p>Showing 1–12 of 126 results</p>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__right">
                                 <p>Sort by Price:</p>
-                                <select>
-                                    <option value="">Low To High</option>
-                                    <option value="">₹0 - ₹55</option>
-                                    <option value="">₹55 - ₹100</option>
-                                </select>
+                              <form action="" method="GET">
+    <select name="sort" onchange="this.form.submit()">
+        <option value="">Default</option>
+        <option value="low_high" {{ request('sort') == 'low_high' ? 'selected' : '' }}>Low To High</option>
+        <option value="high_low" {{ request('sort') == 'high_low' ? 'selected' : '' }}>High To Low</option>
+    </select>
+</form>
                             </div>
                         </div>
                     </div>

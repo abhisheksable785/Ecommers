@@ -109,112 +109,10 @@ ol {
 /*---------------------
   Helper CSS
 -----------------------*/
-.split-container {
-	display: flex;
-	min-height: 100vh;
-}
-
-.left-panel {
-	flex: 1;
-	background-color: #f8f9fa;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.right-panel {
-	flex: 1;
-	background-size: cover;
-}
-
-
-.form-card {
-	width: 100%;
-	max-width: 400px;
-	background-color: white;
-	padding: 40px;
-	border-radius: 20px;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.form-card h3 {
-	text-align: center;
-	margin-bottom: 25px;
-}
 
 .section-title {
 	margin-bottom: 45px;
 	text-align: center;
-}
-.login-container {
-	min-height: 100vh;
-	display: flex;
-	flex-direction: row;
-}
-
-.login-left {
-	flex: 1;
-	background-color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 2rem;
-}
-
-.login-form {
-	width: 100%;
-	max-width: 350px;
-}
-
-.login-right {
-	flex: 1;
-	position: relative;
-	overflow: hidden;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.image-wrapper {
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
-
-.blurred-image {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	filter: blur(4px);
-	z-index: 1;
-}
-
-.promo-text {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -30%);
-	color: rgb(220, 206, 206);
-	font-weight: 800;
-	font-size: 2.5rem;
-	text-align: center;
-	z-index: 2;
-	text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-}
-
-.footer-text {
-	position: absolute;
-	bottom: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	color: white;
-	font-size: 0.9rem;
-	text-align: center;
-	z-index: 2;
-	text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
 }
 
 .section-title span {
@@ -525,7 +423,6 @@ ol {
 	position: relative;
 }
 
-
 .header__menu ul li.active a:after {
 	-webkit-transform: scale(1);
 	-ms-transform: scale(1);
@@ -539,12 +436,6 @@ ol {
 }
 
 .header__menu ul li:hover .dropdown {
-	top: 32px;
-	opacity: 1;
-	visibility: visible;
-}
-
-.header__menu ul li:hover .dropdown1 {
 	top: 32px;
 	opacity: 1;
 	visibility: visible;
@@ -569,27 +460,8 @@ ol {
 	-o-transition: all, 0.3s;
 	transition: all, 0.3s;
 }
-.header__menu ul li .dropdown1 {
-	position: absolute;
-	left: 0;
-	top: 56px;
-	width: 250px;
-	background: #000000;
-	text-align: left;
-	padding: 5px 0;
-	z-index: 9;
-	opacity: 0;
-	visibility: hidden;
-	-webkit-transition: all, 0.3s;
-	-o-transition: all, 0.3s;
-	transition: all, 0.3s;
-}
 
 .header__menu ul li .dropdown li {
-	display: block;
-	margin-right: 0;
-}
-.header__menu ul li .dropdown1 li {
 	display: block;
 	margin-right: 0;
 }
@@ -601,18 +473,8 @@ ol {
 	padding: 5px 20px;
 	text-transform: capitalize;
 }
-.header__menu ul li .dropdown1 li a {
-	font-size: 14px;
-	color: #ffffff;
-	font-weight: 400;
-	padding: 5px 20px;
-	text-transform: capitalize;
-}
 
 .header__menu ul li .dropdown li a:after {
-	display: none;
-}
-.header__menu ul li .dropdown1 li a:after {
 	display: none;
 }
 
@@ -1073,49 +935,9 @@ ol {
 	color: #111111;
 }
 
-.product__pagination {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.product__pagination a,
-.product__pagination span {
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 50%;
-    border: 1px solid #000;
-    color: #000;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-.product__pagination a.active {
-    font-weight: bold;
-    background-color: transparent;
-}
-
-.product__pagination a.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-    border-color: #aaa;
-}
-
-.product__pagination span {
-    border: none;
-}
-
-
-
 .product__item {
 	overflow: hidden;
-	margin: 0px;
+	margin-bottom: 40px;
 }
 
 .product__item.sale .product__item__pic .label {
@@ -1151,16 +973,10 @@ ol {
 }
 
 .product__item__pic {
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 350px; /* You can adjust this as needed */
-    position: relative;
-    transition: all 0.3s;
-    border-radius: 10px;
+	height: 260px;
+	position: relative;
+	background-position: center center;
 }
-
 
 .product__item__pic .label {
 	color: #111111;
@@ -1237,46 +1053,16 @@ ol {
 	padding-top: 25px;
 	position: relative;
 }
-.product__details__pic {
-    height: 400px;  /* or 350px depending on your preference */
-    border: 1px solid #eee;
-    border-radius: 12px;
-    background-color: #f8f9fa;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.product__details__pic img {
-    object-fit: contain;  /* changed from cover to contain */
-    height: 100%;
-    width: 100%;
-}
-.product__details__pic {
-    height: 400px;  /* or 350px depending on your preference */
-    border: 1px solid #eee;
-    border-radius: 12px;
-    background-color: #f8f9fa;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.product__details__pic img {
-    object-fit: contain;  /* changed from cover to contain */
-    height: 100%;
-    width: 100%;
-}
-
-
 
 .product__item__text a {
 	font-size: 15px;
-	color: #000000;
+	color: #e53637;
 	font-weight: 700;
 	position: absolute;
 	left: 0;
 	top: 0;
-
-	visibility: visible;
+	opacity: 0;
+	visibility: hidden;
 	-webkit-transition: all, 0.3s;
 	-o-transition: all, 0.3s;
 	transition: all, 0.3s;
@@ -1363,8 +1149,7 @@ ol {
 -----------------------*/
 
 .shop__sidebar {
-	padding-right: 0px;
-	margin-left: 0px;
+	padding-right: 20px;
 }
 
 .shop__sidebar__search {

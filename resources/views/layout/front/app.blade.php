@@ -21,6 +21,12 @@
 <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('css/slicknav.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
 
 </head>
 
