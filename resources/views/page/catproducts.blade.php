@@ -6,6 +6,26 @@
     <section class="shop spad">
         <div class="container">
             <div class="row">
+        <div class="col-8">
+           @if (session('success'))
+    <div class="alert alert-success" id="successAlert">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            var alertBox = document.getElementById('successAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+@endif
+
+        </div>
+    </div>
+            <div class="row">
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
                         <div class="shop__sidebar__search">
@@ -62,7 +82,7 @@
                                         <h3 class="mb-2 text-primary">Category: {{ $category->name }}</h3>
                                     @endif
 
-                                    {{-- <p>Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} results</p> --}}
+                                    <p>Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} results</p>
 
                                 </div>
                             </div>
@@ -95,19 +115,19 @@
 
                                         <div class="product__actions"
                                             style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
-                                            <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit"
-                                                    style="border: none; background: rgba(255,255,255,0.95); 
-                                           border-radius: 50%; width: 40px; height: 40px; 
-                                           display: flex; align-items: center; justify-content: center;
-                                           box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
-                                           transform: translateY(0);">
-                                                    <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist"
-                                                        style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-                                                </button>
-                                            </form>
+                                                                  <form action="{{ route('wishlist.add') }}" method="POST" style="display:inline;">
+    @csrf
+    <input type="hidden" name="product_id" value="{{ $product->id }}">
+    <button type="submit" data-product-id="{{ $product->id }}"
+            style="border: none; background: rgba(255,255,255,0.95); 
+                   border-radius: 50%; width: 40px; height: 40px; 
+                   display: flex; align-items: center; justify-content: center;
+                   box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
+                   transform: translateY(0);">
+        <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist" 
+             style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+    </button>
+</form>
                                             <a href="simileir"
                                                 style="background: rgba(255,255,255,0.95); border-radius: 50%; 
                                   width: 40px; height: 40px; display: flex; align-items: center; 

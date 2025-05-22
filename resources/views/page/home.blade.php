@@ -4,6 +4,26 @@
 
     <!-- Hero Section Begin -->
     <section class="hero">
+         <div class="row">
+        <div class="col-8">
+           @if (session('success'))
+    <div class="alert alert-success" id="successAlert">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            var alertBox = document.getElementById('successAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+@endif
+
+        </div>
+    </div>
         <div class="hero__slider owl-carousel">
             <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
                 <div class="container">

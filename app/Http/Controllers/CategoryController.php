@@ -18,6 +18,7 @@ class CategoryController extends Controller
         $categories = tbl_category::all();
         return view('page.shop',compact('categories'));
      }
+    
   
    
 

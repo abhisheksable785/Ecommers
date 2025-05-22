@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\tbl_category;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection\Paginator;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductController extends Controller
@@ -22,6 +24,7 @@ class ProductController extends Controller
  }
 
  // Show single product
+ //for admin page
  public function show($id)
  {
     $product = Product::findOrFail($id);
@@ -31,7 +34,14 @@ class ProductController extends Controller
  public function product_details($id)
 {
     $product = Product::findOrFail($id);
-    return view('page.product-details', compact('product'));
+    $isWishlisted = false;
+
+    if (Auth::check()) {
+        $isWishlisted = Wishlist::where('user_id', Auth::id())
+                                ->where('product_id', $product->id)
+                                ->exists();
+    }
+    return view('page.product-details', compact('product','isWishlisted'));
 }
  public function home()
 {
@@ -49,6 +59,7 @@ class ProductController extends Controller
 // Store product
 public function store(Request $request)
 {
+     
     $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
@@ -190,7 +201,13 @@ public function categoryProducts($id, Request $request)
 
 public function shop(Request $request)
 {
-    $categories = tbl_category::all(); // All categories for sidebar/filter
+    $categories = tbl_category::all();
+    
+    $wishlisted = [];
+
+    if (Auth::check()) {
+        $wishlisted = Auth::user()->wishlist->pluck('id')->toArray();
+    }
 
     $query = Product::query(); // Start product query
 
@@ -204,7 +221,7 @@ public function shop(Request $request)
     // Pagination (12 per page) + Keep 'sort' in links
     $products = $query->paginate(12)->appends(['sort' => $request->sort]);
 
-    return view('page.shop', compact('products', 'categories'));
+    return view('page.shop', compact('products', 'categories','wishlisted')); // Pass products to view
 }
 
 

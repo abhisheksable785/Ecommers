@@ -1265,6 +1265,10 @@ ol {
     height: 100%;
     width: 100%;
 }
+.qtybtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 
 

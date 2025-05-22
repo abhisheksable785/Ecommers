@@ -39,8 +39,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
-    public function wishlist()
-    {
-        return $this->belongsToMany(Product::class, 'wishlists');
-    }
+   // User.php
+public function wishlist()
+{
+    return $this->belongsToMany(Product::class, 'wishlists');
+}
+
+    
 }

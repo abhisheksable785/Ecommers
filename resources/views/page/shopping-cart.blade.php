@@ -35,15 +35,19 @@
                                         @if($item->color)
                                             <p>Color: {{ $item->color }}</p>
                                         @endif
-                                    </div>
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="{{ $item->quantity }}">
-                                        </div>
-                                    </div>
-                                </td>
+                                </div>
+                           <td class="quantity__item">
+    <div class="quantity">
+        <div class="pro-qty" data-id="{{ $item->id }}">
+            <button class="qtybtn dec" {{ $item->quantity <= 1 ? 'disabled' : '' }}>-</button>
+            <input type="text" class="qty-input" value="{{ max(1, $item->quantity) }}" readonly style="width: 20px; text-align: center;">
+            <button class="qtybtn inc">+</button>
+        </div>
+    </div>
+</td>
+
+
+
                                 @php 
                                     $itemTotal = $item->price_at_purchase * $item->quantity;
                                     $subtotal += $itemTotal;
@@ -70,29 +74,48 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn">
-                            <a href="shop">Continue Shopping</a>
+                            <a href="{{ route('shop') }}">Continue Shopping</a>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="continue__btn update__btn">
-                            <a href="#" id="update-cart"><i class="fa fa-spinner"></i> Update cart</a>
-                        </div>
-                    </div>
+                    <div class="continue__btn update__btn">
+    <a href="{{ route('wishlist.index') }}" class="btn btn-outline-dark w-100">
+        <i class="fa fa-heart"></i> Add From Wishlist
+    </a>
+</div>
+
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="cart__discount">
                     <h6>Discount codes</h6>
-                    <form action="#">
-                        <input type="text" placeholder="Coupon code">
-                        <button type="submit">Apply</button>
+                    <form action="{{ route('apply.coupon') }}" method="POST">
+                    @csrf
+                    <input type="text" name="coupon_code" placeholder="Enter coupon code">
+                    <button type="submit">Apply</button>
                     </form>
+
+                    @if(session('coupon'))
+                    <p>Coupon Applied: <strong>{{ session('coupon')['code'] }}</strong></p>
+                    @endif
                 </div>
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
-                        <li>Subtotal <span> ₹{{ number_format($subtotal, 2) }}</span></li>
-                        <li>Total <span> ₹{{ number_format($subtotal, 2) }}</span></li>
+                        <li>Subtotal <span>₹{{ number_format($subtotal, 2) }}</span></li>
+
+                            @if(session('coupon'))
+                                <li>Discount ({{ session('coupon')['code'] }}) 
+                                    <span>- ₹{{ number_format(session('coupon')['discount'], 2) }}</span>
+                                </li>
+                            @endif
+ 
+                            <li>Total 
+                                <span>
+                                    ₹{{ number_format($subtotal - (session('coupon')['discount'] ?? 0), 2) }}
+                                </span>
+                            </li>
+
+                        
                     </ul>
                     <a href="{{ route('checkout') }}" class="primary-btn">Proceed to checkout</a>
                 </div>
@@ -103,3 +126,58 @@
 <!-- Shopping Cart Section End -->
 
 @endsection
+@push('scripts')
+<script>
+   $(document).ready(function () {
+    $('.qtybtn').on('click', function () {
+        var button = $(this);
+        var parent = button.closest('.pro-qty');
+        var input = parent.find('input');
+        var currentQty = parseInt(input.val());
+        var cartItemId = parent.data('id');
+
+        var newQty = button.hasClass('inc') ? currentQty + 1 : currentQty - 1;
+
+        // Block minus if qty is already 1
+        if (newQty < 1) return;
+
+        $.ajax({
+            url: "{{ route('cart.update') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                quantities: [{ id: cartItemId, quantity: newQty }]
+            },
+            success: function (res) {
+                if (res.success) {
+                    input.val(newQty);
+
+                    // Update row total
+                    var price = parseFloat(parent.closest('tr').find('.product__cart__item__text h5').text().replace(/[₹,]/g, '')) || 0;
+                    var newTotal = (price * newQty).toFixed(2);
+                    parent.closest('tr').find('.cart__price').text('₹' + newTotal);
+
+                    // Update cart total
+                    var subtotal = 0;
+                    $('.cart__price').each(function () {
+                        subtotal += parseFloat($(this).text().replace(/[₹,]/g, '')) || 0;
+                    });
+                    $('.cart__total span, .cart__total li span').text('₹' + subtotal.toFixed(2));
+
+                    // Disable/Enable minus button
+                    let decBtn = parent.find('.dec');
+                    if (newQty <= 1) {
+                        decBtn.prop('disabled', true);
+                    } else {
+                        decBtn.prop('disabled', false);
+                    }
+                }
+            }
+        });
+    });
+});
+
+</script>
+
+
+@endpush

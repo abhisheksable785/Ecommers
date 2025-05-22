@@ -85,7 +85,7 @@
                     <div class="counter__item__number">
                         <h2 class="cn_num">2022</h2>
                     </div>
-                    <span>Total <br />Categories</span>
+                    <span>Total <br />{{$categories->total()}}</span>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">

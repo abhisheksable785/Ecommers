@@ -7,13 +7,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
-
+use App\Http\Controllers\CouponController;
 use Illuminate\Support\Facades\Route;
 
 ///back
 ///back
 ///back
 // mysqld --skip-grant-tables --skip-external-locking
+
 Route::get("/dashboard", function () {
     return view("admin.dashboard");
 });
@@ -84,6 +85,7 @@ Route::controller(CategoryController::class)->group(function(){
     Route::post('/category/update/{id}',  'update')->name('category.update');
     Route::delete('/category/delete/{id}', 'destroy')->name('category.destroy');
     Route::get('/shop',  'shop')->name('shop');
+
     Route::get('/',  'cathome')->name('category.home');
 
 
@@ -120,14 +122,18 @@ Route::controller(AuthController::class)->group(function(){
     
 
 });
+Route::controller(WishlistController::class)->group(function(){
+    Route::get('/wishlist', 'index')->name('wishlist.index');
+    Route::post('/wishlist/add/{id}', 'addToWishlist')->name('wishlist.add');
+   Route::delete('/wishlist/delete/{id}',  'destroy')->name('wishlist.delete');;
+   Route::post('/wishlist/move-to-cart',  'moveToCart')->name('wishlist.moveToCart');
+});
 
 Route::get('/reset-pass',function(){
     return view('auth.passwords.email');
 });
 Route::middleware(['auth'])->group(function () {
-    Route::get('/wishlist', [WishlistController::class, 'viewWishlist'])->name('wishlist.index');
-    Route::post('/wishlist/add/{id}', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
-    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    
 });
 
 
@@ -141,6 +147,16 @@ Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name
 
 Route::delete('/cart/{id}', [BagController::class, 'remove'])->name('cart.remove');
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');
+
+
+Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
+Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
+Route::post('/coupons/store', [CouponController::class, 'store'])->name('coupons.store');
+Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
+Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
+Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+
 
 
 // routes/web.php

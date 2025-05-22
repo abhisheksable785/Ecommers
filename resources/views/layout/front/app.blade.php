@@ -26,6 +26,8 @@
 
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 </head>
@@ -63,7 +65,7 @@
                                 
                                 </ul>
                             </li>
-                            <li><a href="">Blog</a></li>
+                            <li><a href="blog">Blog</a></li>
                             <li><a href="contact">Contacts</a></li>
                             <li></li>
                             <li></li>
@@ -73,10 +75,10 @@
                                 <img src="img/icon/search.png" alt="">
                             </a></li>
 
-                            <li>  <a href="wishlist">
+                            <li>  <a href="{{ route('wishlist.index') }}">
                                 <img src="img/icon/heart.png" alt="">
                             </a></li>
-                            <li> <a href="cart">
+                            <li> <a href="{{ route('cart') }}">
                                 <img src="img/icon/cart.png" alt=""> <span></span>
                             </a></li>
                             <li>
@@ -94,9 +96,9 @@
                                         <!-- Show this if user IS logged in -->
                                         <li><h6 style="color: white">{{ Auth::user()->name }}</h6></li>
                                         <li><a href="orders">My Orders</a></li>
-                                        <li><a href="wishlist">Wishlist</a></li>
+                                        <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
                                         <li><a href="gift">Gift Cards</a></li>
-                                        <li><a href="'credit">BMT Credits</a></li>
+                                        <li><a href="credit">BMT Credits</a></li>
                                        
                             
                                         <!-- Logout using a form for security -->
@@ -279,6 +281,7 @@
                 }
             });
         </script> --}}
+        @stack('scripts')
         
     </body>
     

@@ -2,6 +2,26 @@
 @section('title','Check Out')
 @section('content')
 
+ <div class="row">
+        <div class="col-8">
+           @if (session('success'))
+    <div class="alert alert-success" id="successAlert">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            var alertBox = document.getElementById('successAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+@endif
+
+        </div>
+    </div>
     <!-- Checkout Section Begin -->
     <section class="checkout spad">
         <div class="container">
@@ -9,8 +29,7 @@
                 <form action="#">
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
-                            <h6 class="coupon__code"><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click
-                            here</a> to enter your code</h6>
+                            
                             <h6 class="checkout__title">Billing Details</h6>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -28,24 +47,24 @@
                             </div>
                             <div class="checkout__input">
                                 <p>Country<span>*</span></p>
-                                <input type="text">
+                                <input type="text" id="country">
                             </div>
                             <div class="checkout__input">
                                 <p>Address<span>*</span></p>
-                                <input type="text" placeholder="Street Address" class="checkout__input__add">
+                                <input type="text" placeholder="Street Address" id="address" class="checkout__input__add">
                             
                             </div>
                             <div class="checkout__input">
                                 <p>Town/City<span>*</span></p>
-                                <input type="text">
+                                <input type="text" id="city">
                             </div>
                             <div class="checkout__input">
                                 <p>Country/State<span>*</span></p>
-                                <input type="text">
+                                <input type="text" id="state">
                             </div>
                             <div class="checkout__input">
                                 <p>Postcode / ZIP<span>*</span></p>
-                                <input type="text">
+                                <input type="text" id="zipcode">
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
@@ -110,3 +129,43 @@
     <!-- Checkout Section End -->
 
 @endsection
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`)
+                .then(response => response.json())
+                .then(data => {
+                    const addr = data.address;
+
+                    document.getElementById('country').value = addr.country || '';
+                    document.getElementById('address').value = `${addr.road || ''}, ${addr.suburb || ''}`;
+                    
+                    // Smart fallback for city
+                    document.getElementById('city').value =
+                        addr.city ||
+                        addr.town ||
+                        addr.village ||
+                        addr.hamlet ||
+                        addr.municipality ||
+                        addr.locality ||
+                        '';
+
+                    document.getElementById('state').value = addr.state || addr.county || '';
+                    document.getElementById('zipcode').value = addr.postcode || '';
+                })
+                .catch(error => {
+                    console.error('Geocoding error:', error);
+                });
+        }, function (error) {
+            alert("Location access denied or unavailable.");
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+});
+</script>
+

@@ -128,10 +128,10 @@
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
+              <li >
+                <a  href="{{ route('coupons.index') }}">
                   <i class="fas fa-th-list"></i>
-                  <p>Sidebar Layouts</p>
+                  <p>Coupons</p>
                   <span class="caret"></span>
                 </a>
               
