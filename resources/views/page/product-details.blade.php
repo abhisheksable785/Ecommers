@@ -54,36 +54,31 @@
             }
         }
     </style>
-
-    <!-- Success Toast -->
-    <div class="toast-notification p-3">
-        <div class="d-flex align-items-center">
-            <div class="me-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#4CAF50">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                </svg>
-            </div>
-            <div class="flex-grow-1">
-                <strong class="me-auto">Success!</strong>
-                <div id="toast-message"></div>
-            </div>
-            <button type="button" class="btn-close" onclick="hideToast()"></button>
-        </div>
+    <div class="row">
+        <div class="col-8">
+           @if (session('success'))
+    <div class="alert alert-success" id="successAlert">
+        {{ session('success') }}
     </div>
 
+    <script>
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            var alertBox = document.getElementById('successAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+@endif
+
+        </div>
+    </div>
+    
     <section class="product-details spad">
         <div class="container">
-            @if (session('success'))
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        showToast('{{ session('success') }}');
-                    });
-                </script>
-            @endif
-
-            <div class="row">
-                <div class="col-lg-6">
+                <div class="row">
+                <div class="col-lg-5">
                     <div class="product__details__pic">
                         <img id="mainProductImage" src="{{ asset('storage/' . $product->image) }}"
                             alt="{{ $product->name }}">
@@ -114,7 +109,7 @@
 
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-7">
                     <div class="product__details__text">
                         <h3 class="fw-bold mb-3">{{ $product->brand ?? 'BRAND NAME' }}</h3>
                         <p class="text-muted h5 mb-4">{{ $product->name }}</p>
@@ -157,7 +152,8 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="d-flex mt-5 gap-3">
+                        <div class="container" style="margin: 0px; ">
+                            <div class="d-flex mt-5 gap-2">
                             <form action="{{ route('bag.add') }}" method="POST" class="w-50">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -165,24 +161,37 @@
                                 <input type="hidden" name="size" id="selected-size" value="{{ $product->size }}">
                                 <input type="hidden" name="color" id="selected-color">
 
-                                <button type="submit" class="btn btn-danger w-100 py-3 fw-bold rounded-1">
+                                <button type="submit" class="btn btn-danger w-75 py-3 fw-bold rounded-1">
                                     <i class="bi bi-bag-fill me-2"></i> ADD TO BAG
                                 </button>
                             </form>
 
                             <form action="{{ route('wishlist.add') }}" method="POST" class="w-50">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <button type="submit" class="btn btn-outline-dark w-100 py-3 fw-bold rounded-1">
-                                    <i class="bi bi-heart me-2"></i> WISHLIST
-                                </button>
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button type="submit"
+                                class="btn {{ $isWishlisted ? 'btn-success' : 'btn-outline-dark' }} w-75 py-3 fw-bold rounded-1"
+                                {{ $isWishlisted ? 'disabled' : '' }}>
+                                <i class="bi {{ $isWishlisted ? 'bi-check-circle-fill' : 'bi-heart' }} me-2"></i>
+                                {{ $isWishlisted ? 'WISHLISTED' : 'WISHLIST' }}
+                            </button>
                             </form>
+
+                            </div>
+                        
+
+                        </div>
+                        <div class="d-flex mt-5 gap-5">
+                            <h5>Product Details :</h5>
+                           
+                            {{ $product->description }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @endsection
 
     <script>
         // Size Selection
@@ -236,4 +245,4 @@
         });
     </script>
 
-@endsection
+

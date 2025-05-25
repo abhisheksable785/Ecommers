@@ -11,85 +11,47 @@ use Illuminate\Support\Facades\Log;
 class BagController extends Controller
 {
 
-   public function add(Request $request)
+  public function add(Request $request)
 {
-    // Check authentication
+   
+    // Redirect to login if not authenticated
     if (!Auth::check()) {
         return redirect()
             ->route('login')
             ->with('error', 'Please login to add items to your bag');
     }
-
-    // Validate request data
-    $validated = $request->validate([
-        'product_id' => 'required|exists:tbl_product,id',
-        'price' => 'required|numeric|min:0',
-        'size' => 'required|string|max:50',
-        'color' => 'nullable|string|max:50'
-    ], [
-        'size.required' => 'Please select a size before adding to bag',
-        'product_id.exists' => 'The selected product is no longer available'
+    
+    // Find or create bag item
+    $item = AddToBag::firstOrNew([
+        'user_id' => Auth::id(),
+        'product_id' => $request->product_id,
+        'size' => $request->size,
+        'color' => $request->color,
     ]);
 
-    try {
-        // Check product availability
-        $product = Product::findOrFail($validated['product_id']);
-        
-        if (!$product->is_active) {
-            return back()
-                ->with('error', 'This product is currently unavailable')
-                ->withInput();
-        }
+    // Set quantity and price
+    $item->price_at_purchase = $request->price;
+    $item->quantity = $item->exists ? $item->quantity + 1 : 1;
 
-        // Check stock availability
-        if ($product->stock <= 0) {
-            return back()
-                ->with('error', 'This product is out of stock')
-                ->withInput();
-        }
-
-        // Find or create bag item
-        $item = AddToBag::firstOrNew([
-            'user_id' => Auth::id(),
-            'product_id' => $validated['product_id'],
-            'size' => $validated['size'],
-            'color' => $validated['color'] ?? null
-        ]);
-
-        // Update item details
-        $item->price_at_purchase = $validated['price'];
-        $item->quantity = $item->exists ? $item->quantity + 1 : 1;
-        
-        // Validate maximum quantity
-        $maxQuantity = 10; // Configurable maximum
-        if ($item->quantity > $maxQuantity) {
-            return back()
-                ->with('error', "Maximum quantity ($maxQuantity) reached for this item")
-                ->withInput();
-        }
-
-        $item->save();
-
-        // Update user's cart count in session
-        $cartCount = AddToBag::where('user_id', Auth::id())->count();
-        session(['cart_count' => $cartCount]);
-
+    // Max quantity check
+    $maxQuantity = 10;
+    if ($item->quantity > $maxQuantity) {
         return back()
-            ->with('success', 'Product added to your bag successfully!')
-            ->with('added_product_id', $validated['product_id']);
-
-    } catch (\Exception $e) {
-        Log::error('Add to bag failed: ' . $e->getMessage(), [
-            'user_id' => Auth::id(),
-            'product_id' => $request->product_id,
-            'ip' => $request->ip()
-        ]);
-
-        return back()
-            ->with('error', 'Failed to add product to bag. Please try again.')
+            ->with('error', "Maximum quantity ($maxQuantity) reached for this item")
             ->withInput();
     }
+
+    // Save and update cart count
+    $item->save();
+    $cartCount = AddToBag::where('user_id', Auth::id())->count();
+    session(['cart_count' => $cartCount]);
+
+    return back()
+        ->with('success', 'Product added to your bag successfully!')
+        ->with('added_product_id', $request->product_id);
 }
+
+
 
     public function cart(){
         $cartItems = AddToBag::with('product')

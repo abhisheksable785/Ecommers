@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\profileController;
 use Illuminate\Support\Facades\Route;
 
 ///back
@@ -147,6 +148,7 @@ Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name
 
 Route::delete('/cart/{id}', [BagController::class, 'remove'])->name('cart.remove');
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
 
 
 Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
@@ -165,3 +167,5 @@ Route::prefix('cart')->group(function () {
     Route::post('/update', [BagController::class, 'update'])->name('cart.update');
     Route::delete('/remove/{id}', [BagController::class, 'remove'])->name('cart.remove');
 });
+Route::get('/profile', [profileController::class, 'profile'])->name('profile.index');
+Route::resource('profile', profileController::class)->only(['index', 'store', 'update']);

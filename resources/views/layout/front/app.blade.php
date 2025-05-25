@@ -95,6 +95,8 @@
                                     @else
                                         <!-- Show this if user IS logged in -->
                                         <li><h6 style="color: white">{{ Auth::user()->name }}</h6></li>
+                                        <li><a href="{{ route('profile.index') }}">My Profile</a></li>
+
                                         <li><a href="orders">My Orders</a></li>
                                         <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
                                         <li><a href="gift">Gift Cards</a></li>
