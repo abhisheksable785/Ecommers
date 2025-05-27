@@ -24,6 +24,7 @@ class CheckoutController extends Controller
 
 public function placeOrder(Request $request)
 {
+    
     $cartItems = AddToBag::with('product')->where('user_id', auth()->id())->get();
 
     if ($cartItems->isEmpty()) {

@@ -8,7 +8,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\profileController;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Route;
 
 ///back
@@ -65,14 +67,17 @@ Route::get("/users", function () {
     return view("admin.users");
 });
 
-Route::controller(Controller::class)->group(function(){
-    Route::get('/shop/{id}', 'shop')->name('shop.cat');
-    Route::post('/contact_list', 'contact');
-    Route::get('/contact_list', 'show_contact');
-    Route::get('/contact/{id}', 'view_contact')->name('contact.show');
-    Route::delete('/contact_list/{id}', 'delete_contact');
 
-});
+
+// Route::controller(Controller::class)->group(function(){
+//     Route::get('/shop/{id}', 'shop')->name('shop.cat');
+//     Route::post('/contact_list', 'contact');
+    
+//     Route::get('/contact/{id}', 'view_contact')->name('contact.show');
+//     Route::delete('/contact_list/{id}', 'delete_contact');
+
+// });
+
 
 ///admin category
 ///admin category
@@ -169,3 +174,14 @@ Route::prefix('cart')->group(function () {
 });
 Route::get('/profile', [profileController::class, 'profile'])->name('profile.index');
 Route::resource('profile', profileController::class)->only(['index', 'store', 'update']);
+
+Route::get('/oders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
+Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
+Route::post('orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+Route::get('/user-order', [OrderController::class, 'order'])->name('user.order');
+
+Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoice.store');
+Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+

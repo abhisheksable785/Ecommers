@@ -18,7 +18,8 @@ class profileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $profile = $user->profile; // using hasOne relationship
+        $profile = $user->profile;
+         // using hasOne relationship
 
     return view('page.profile', compact('profile'));
     }
