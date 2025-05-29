@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\contactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\profileController;
@@ -42,9 +43,7 @@ Route::get("/bill", function () {
 Route::get("/shopping-cart", function () {
     return view("page.shopping-cart");
 });
-Route::get("/contact", function () {
-    return view("page.contact");
-});
+
 Route::get("/blog", function () {
     return view("page.blog");
 });
@@ -82,8 +81,17 @@ Route::get("/users", function () {
 ///admin category
 ///admin category
 ///admin category
+
+Route::controller(contactController::class)->group(function(){
+Route::get('/contact-ind','index')->name('contact.index');
+Route::get('/add-contact','create')->name('contact.create');
+Route::post('/contact-store','store')->name('contact.store');
+Route::get('/contact/{id}', 'view')->name('contact.view');
+Route::delete('/contact/{id}', 'destroy')->name('contact.destroy');
+});
+
 Route::controller(CategoryController::class)->group(function(){
-    Route::get('/category',  'index')->name('category.list');
+    Route::get('/category',  'index')->name('category.index');
     Route::get('/category/view/{id}',  'view')->name('category.view');
     Route::view('/category/add',  'admin.category.add-cat')->name('category.add');
     Route::post('/category/store', 'store')->name('category.store');
@@ -111,7 +119,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('category-data', 'index');
     Route::get('/shop',  'shop')->name('shop');
     Route::get('/catproducts/{id}', 'categoryProducts')->name('category.products');
-    Route::get('/product/{id}',  'product_details')->name('details.show');
+    Route::get('/product/{id}',  'product_details')->name('product.details');
     Route::get('/search', 'search')->name('product.search');
 
     // Route::get('/',[ProductController::class, 'home'])->name('products.home');
@@ -148,10 +156,8 @@ Route::get('/users', [AuthController::class, 'index'])->name('users.index');
 Route::middleware('auth')->get('/dashboard', function () {
     return view('admin.dashboard');
 });
-Route::post('/bag/add', [BagController::class, 'add'])->name('bag.add');
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 
-Route::delete('/cart/{id}', [BagController::class, 'remove'])->name('cart.remove');
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
 
@@ -167,21 +173,25 @@ Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('
 
 
 // routes/web.php
-Route::prefix('cart')->group(function () {
-    Route::get('/', [BagController::class, 'index'])->name('cart');
-    Route::post('/update', [BagController::class, 'update'])->name('cart.update');
-    Route::delete('/remove/{id}', [BagController::class, 'remove'])->name('cart.remove');
+Route::controller(BagController::class)->group(function () {
+    Route::get('/bag', 'index')->name('bag.index');
+    Route::post('/bag-update',  'update')->name('cart.update');
+    Route::delete('/bag/remove/{id}',  'remove')->name('bag.remove');
+    Route::post('/bag/add', 'add')->name('bag.add');
 });
-Route::get('/profile', [profileController::class, 'profile'])->name('profile.index');
+   
+
+Route::get('/my-profile', [profileController::class, 'index'])->name('profile.index');
 Route::resource('profile', profileController::class)->only(['index', 'store', 'update']);
 
-Route::get('/oders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
 Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
 Route::post('orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-Route::get('/user-order', [OrderController::class, 'order'])->name('user.order');
+Route::get('/user-order', [OrderController::class, 'order'])->name('user.orders');
 
 Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoice.store');
 Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+
 

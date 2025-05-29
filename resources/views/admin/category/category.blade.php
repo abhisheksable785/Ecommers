@@ -18,7 +18,7 @@
             <span class="btn-label"><i class="fa fa-"></i></span>Add Category
         </a>
     </div>
-    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd;">
+    <div style=" overflow-y: auto; border: 1px solid #ddd;">
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>

@@ -9,5 +9,7 @@ class tbl_contact extends Model
 {
     use HasFactory;
     protected $table = "tbl_contact";
+    protected $guarded = [];
+    
 
 }

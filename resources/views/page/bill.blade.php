@@ -20,6 +20,16 @@
         @endif
     </div>
 </div>
+      @if ($errors->any())
+        <ul>
+
+            @foreach ($errors->all() as $error)
+                <li style="color: red">{{ $error }}</li>
+            @endforeach
+        </ul>
+
+    @endif
+
 
 <!-- Checkout Section Begin -->
 <section class="checkout spad">
@@ -45,7 +55,7 @@
 
                         <div class="checkout__input">
                             <p>Country<span>*</span></p>
-                            <input type="text" id="country" name="country" value="{{ old('country', $profile->country ?? '') }}">
+                            <input type="text" id="country" name="country" value="{{ old('country', $profile->country ?? 'India') }}">
                         </div>
 
                         <div class="checkout__input">
@@ -56,7 +66,7 @@
 
                         <div class="checkout__input">
                             <p>State<span>*</span></p>
-                            <input type="text" id="state" name="state" value="{{ old('state', $profile->state ?? '') }}">
+                            <input type="text" id="state" name="state" value="{{ old('state', $profile->state ?? 'Maharastra') }}">
                         </div>
 
                         <div class="checkout__input">
@@ -69,10 +79,10 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Phone<span>*</span></p>
-                                    <input type="text" id="phone" name="phone"
-                                        value="{{ old('phone', $profile->mobile_number ?? '') }}">
+                                    <input type="text" id="phone" name="mobile_number" maxlength="10"
+                                        value="{{ old('phone', $profile->mobile_number) }}">
                                 </div>
-                            </div>
+                            </div>  
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Email<span>*</span></p>

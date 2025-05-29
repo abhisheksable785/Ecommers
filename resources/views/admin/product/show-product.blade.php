@@ -18,7 +18,7 @@
     @endif
 
     <!-- Scrollable Table Wrapper -->
-    <div style="max-height: 500px; overflow-y: auto;">
+    <div style="overflow-y: auto;">
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>

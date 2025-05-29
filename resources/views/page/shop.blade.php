@@ -215,14 +215,14 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" >
     @foreach ($products as $product)
         <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
             <div class="product__item" style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
                 <div class="product__item__pic set-bg"
                      data-setbg="{{ asset('storage/' . $product->image) }}"
                      style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
-                     onclick="window.location.href='{{ route('details.show', $product->id) }}'">
+                     onclick="window.location.href='{{ route('product.details', $product->id) }}'">
                      
                     <div class="product__actions" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
                        <form action="{{ route('wishlist.add') }}" method="POST" style="display:inline;">
@@ -252,7 +252,7 @@
                 <div class="product__item__text" style="padding: 20px; position: relative;">
                     <div style="margin-bottom: 12px;">
                         <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
-                            <a href="{{ route('details.show', $product->id) }}" 
+                            <a href="{{ route('product.details', $product->id) }}" 
                                style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
                                 {{ $product->name }}
                             </a>

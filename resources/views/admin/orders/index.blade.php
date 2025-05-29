@@ -5,7 +5,7 @@
     
 <h2>Order Index</h2>
 
-<div style="max-height: 500px; overflow-y: auto;">
+<div style="max-height:100%; overflow-y: auto;">
     <table class="table table-bordered">
         <thead class="table-dark">
             <tr> 
@@ -24,9 +24,9 @@
             @foreach ($orders as $order)
             <tr>
                 <td>{{ $order->id }}</td>
-                <td>{{ $order->user->name ?? 'N/A' }}</td>
-                <td>{{ $order->user->email ?? 'N/A' }}</td>
-                <td>{{ $order->profile->address ??'N/A' }}</td>
+                <td>{{ $profile->full_name ??'N/A' }}</td>
+                <td>{{ $profile->email  ??'N/A'}}</td>
+                <td>{{ $profile->address ??'N/A' }}</td>
                 <td>₹{{ number_format($order->total_amount, 2) }}</td>
                 <td>{{ $order->status }}</td>
                 <td>
@@ -42,6 +42,7 @@
             @endforeach
         </tbody>
     </table>
+     {{ $orders->links() }}
 </div>
 </div>
 @endsection

@@ -23,12 +23,12 @@ class Profile extends Model
     ];
 
     // Define the relationship: A profile belongs to a user
-public function profile()
-{
-    return $this->hasOne(Profile::class);
-}
+
 public function orders()
 {
     return $this->hasMany(Order::class);
+}
+public function users(){
+    return $this->belongsTo(User::class,'user_id');
 }
 }

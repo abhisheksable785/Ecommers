@@ -1,7 +1,60 @@
 @extends('layout.front.app')
 @section('title', 'Home')
 @section('content')
+<style>
+    
 
+    .card {
+      width: 200;
+      background: rgb(225, 220, 220);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 16px;
+    }
+
+    .card-content h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .card-content p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .add-to-cart {
+      margin-top: 12px;
+      padding: 10px;
+      width: 100%;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    .add-to-cart:hover {
+      background-color: #0056b3;
+    }
+  </style>
     <!-- Hero Section Begin -->
     <section class="hero">
          <div class="row">
@@ -77,16 +130,16 @@
             <div class="row">
 
                 @foreach ($categories as $category)
-                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4" class="card" style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
                         <div class="card text-center border-0 shadow-sm">
                             <div class="card-body p-2 d-flex flex-column align-items-center"
-                                style=" cursor: pointer;background-color: rgb(255, 255, 255); border-radius: 12px; box-shadow: 3px 5px 6px #000;">
+                                style=" cursor: pointer;background-color: rgb(255, 255, 255); border-radius: 12px;transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 3px 5px 6px #000;">
                                 {{-- Category Image --}}
                                 <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
                                     class="img-fluid mb-2 rounded" onclick="window.location.href='{{ route('category.products', $category->id) }}'"
                                     style="height: 160px; object-fit: contain; width: 200px; border-radius: 10px;">
 
-                                {{-- Category Name --}}
+                                {{-- Category Name --}} 
                                 <h6 class="fw-semibold text-dark mb-1">{{ $category->name }}</h6>
 
                                 {{-- Discount (example random here) --}}
@@ -103,6 +156,7 @@
                         </div>
                     </div>
                 @endforeach
+                
             </div>
         </div>
     </section>

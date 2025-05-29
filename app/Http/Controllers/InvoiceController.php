@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddToBag;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Invoice;
+use App\Models\Profile;
 
 class InvoiceController extends Controller
 {
@@ -33,10 +35,11 @@ class InvoiceController extends Controller
 }
 public function show($id)
 {
-   $invoice = Invoice::with(['users.profile', 'products'])->findOrFail($id);
+   $invoice = Invoice::with(['users', 'products'])->findOrFail($id);
+   $profile = Profile::where('user_id', auth()->id())->first();
 
     // return $invoice;
-    return view('admin.orders.invoice', compact('invoice'));
+    return view('admin.orders.invoice', compact('invoice', 'profile'));
 }
 
 

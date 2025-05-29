@@ -31,6 +31,10 @@ class AddToBag extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+    public function profile()
+{
+    return $this->belongsTo(Profile::class );
+}
 
     // REMOVE THIS - Controller logic shouldn't be in model
     // public function add(Request $request) {...}

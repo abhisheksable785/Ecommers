@@ -54,7 +54,7 @@
                                 @endphp
                                 <td class="cart__price"> ₹{{ number_format($itemTotal, 2) }}</td>
                                 <td class="cart__close">
-                                    <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                    <form action="{{ route('bag.remove', $item->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" style="background: none; border: none;">

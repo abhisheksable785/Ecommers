@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AddToBag;
 use Illuminate\Http\Request;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -17,24 +18,13 @@ class profileController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $profile = $user->profile;
-         // using hasOne relationship
+         $profile= Profile::where('user_id',auth()->id())->first();
 
     return view('page.profile', compact('profile'));
     }
-public function forcheckout()
-{
-    $user = Auth::user();
-    $profile = $user->profile;
-    $cartItems = AddToBag::where('user_id', $user->id)->with('product')->get();
-    $subtotal = $cartItems->sum(function ($item) {
-        return $item->price_at_purchase * $item->quantity;
-    });
+  
 
-    return view('page.bill', compact('profile', 'cartItems', 'subtotal'));
-}
-
+ 
     /**
      * Show the form for creating a new resource.
      *

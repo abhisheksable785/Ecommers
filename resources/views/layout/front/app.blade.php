@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zxx">
-
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Male_Fashion Template">
@@ -8,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>BMT Fashion</title>
+    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"rel="stylesheet">
@@ -21,6 +21,8 @@
 <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('css/slicknav.min.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ asset('css/person.css') }}" type="text/css">
+
 <!-- Swiper CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
@@ -60,13 +62,13 @@
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="about">About Us</a></li>
-                                    <li><a href="{{ route('cart') }}">Shopping Cart</a></li>
+                                    <li><a href="{{ route('bag.index') }}">Shopping Cart</a></li>
                                     <li><a href="{{ route('checkout') }}">Check Out</a></li>
                                 
                                 </ul>
                             </li>
                             <li><a href="blog">Blog</a></li>
-                            <li><a href="contact">Contacts</a></li>
+                            <li><a href="{{ route('contact.create') }}">Contacts</a></li>
                             <li></li>
                             <li></li>
 
@@ -78,11 +80,11 @@
                             <li>  <a href="{{ route('wishlist.index') }}">
                                 <img src="img/icon/heart.png" alt="">
                             </a></li>
-                            <li> <a href="{{ route('cart') }}">
+                            <li> <a href="{{ route('bag.index') }}">
                                 <img src="img/icon/cart.png" alt=""> <span></span>
                             </a></li>
                             <li>
-                                <a href="#" class="profile-toggle">
+                                <a href="{{ route('profile.index') }}" class="profile-toggle">
                                     <img src="img/icon/profile.png" alt="" height="30px" width="30px">
                                 </a>
                                 <ul class="dropdown1">
@@ -97,7 +99,7 @@
                                         <li><h6 style="color: white">{{ Auth::user()->name }}</h6></li>
                                         <li><a href="{{ route('profile.index') }}">My Profile</a></li>
 
-                                        <li><a href="orders">My Orders</a></li>
+                                        <li><a href="{{ route('user.orders') }}">My Orders</a></li>
                                         <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
                                         <li><a href="gift">Gift Cards</a></li>
                                         <li><a href="credit">BMT Credits</a></li>
@@ -178,7 +180,7 @@
                     <div class="footer__widget">
                         <h6>Shopping</h6>
                         <ul>
-                            <li><a href="contact">Contact Us</a></li>
+                            <li><a href="{{ route('contact.create') }}">Contact Us</a></li>
                             <li><a href="#">Payment Methods</a></li>
                             <li><a href="#">Delivary</a></li>
                             <li><a href="#">Return & Exchanges</a></li>

@@ -1,7 +1,26 @@
 @extends('layout.front.app')
 @section('title','Contact')
 @section('content')
+     <div class="row">
+        <div class="col-8">
+           @if (session('success'))
+    <div class="alert alert-success" id="successAlert">
+        {{ session('success') }}
+    </div>
 
+    <script>
+        // Hide success message after 3 seconds
+        setTimeout(function() {
+            var alertBox = document.getElementById('successAlert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 3000); // 3000ms = 3 seconds
+    </script>
+@endif
+
+        </div>
+    </div>
 <!-- Map Begin -->
 <div class="map">
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3663.0507552280847!2d74.57294347502852!3d18.14521868287706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc3a03957da0e85%3A0xd9f9bb98706717e0!2sBaramati%20Bus%20Stand!5e1!3m2!1sen!2sin!4v1742909184819!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
@@ -30,7 +49,7 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="contact__form">
-                    <form action="contact_list" method="POST">
+                    <form action="{{ route('contact.store') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">

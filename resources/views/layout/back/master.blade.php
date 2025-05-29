@@ -66,7 +66,7 @@
 </head>
 
 <body>
-    < class="wrapper">
+    
         <!-- Sidebar -->
         <div class="sidebar" data-background-color="dark">
             <div class="sidebar-logo">
@@ -87,10 +87,10 @@
                     <ul class="nav nav-secondary">
                         <li class="nav-item active"><a href="/dashboard"><i class="fas fa-home"></i><p>Dashboard</p></a></li>
                         <li class="nav-section"><span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span><h4 class="text-section">Components</h4></li>
-                        <li class="nav-item active"><a href="contact_list"><i class="fas fa-phone"></i><p>Contact</p></a></li>
+                        <li class="nav-item active"><a href="{{ route('contact.index') }}"><i class="fas fa-phone"></i><p>Contact</p></a></li>
                         <li class="nav-item active"><a href="users"><i class="fas fa-user"></i><p>Users</p></a></li>
-                        <li class="nav-item active"><a href="products"><i class="fas fa-user"></i><p>Products</p></a></li>
-                        <li class="nav-item active"><a href="category"><i class="fas fa-user"></i><p>Category</p></a></li>
+                        <li class="nav-item active"><a href="{{ route('products.index') }}"><i class="fas fa-user"></i><p>Products</p></a></li>
+                        <li class="nav-item active"><a href="{{ route('category.index') }}"><i class="fas fa-user"></i><p>Category</p></a></li>
                         <li class="nav-item active"><a href="{{ route('coupons.index') }}"><i class="fa-solid fa-user"></i><p>Coupon</p></a></li>
                         <li class="nav-item active"><a href="{{ route('orders.index') }}"><i class="fa-solid fa-user"></i><p>Order</p></a></li>
                     </ul>
@@ -101,7 +101,7 @@
         <!-- End Sidebar -->
 
         <!-- Main Panel -->
-        <div class="main-panel">
+        <div class="main-panel" >
             <!-- Header -->
             <div class="main-header">
                 <div class="main-header-logo">
@@ -175,11 +175,11 @@
             </div>
 
             <!-- Footer -->
-            <footer class="footer" style="background-color: #f8f9fa; z-index: 1000;">
+            <footer class="footer" >
                 <div class="container-fluid d-flex justify-content-between py-2">
                     <nav class="pull-left">
                         <ul class="nav">
-                            <li class="nav-item"><a class="nav-link" href="#">BMT Fashion </a></li>
+                            <li class="nav-item"><a class="nav-link" href="/">BMT Fashion </a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Licenses</a></li>
                         </ul>
@@ -191,7 +191,7 @@
                 </div>
             </footer>
         </div>
-    </div>
+    
 
     <!-- Core JS Files -->
     <script src="assets/js/core/jquery-3.7.1.min.js"></script>

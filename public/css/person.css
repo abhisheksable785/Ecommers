@@ -1,0 +1,61 @@
+ .btn-danger.custom-hover {
+    background-color: #ffffff; /* Red */
+    color: rgb(0, 0, 0);
+    border:1px solid black; /* Black border */
+    transition: all 0.3s ease;
+  }
+
+  .btn-danger.custom-hover:hover {
+    background-color: rgb(236, 35, 35);        /* White background on hover */
+    color: white;                   /* Keep text white */
+    border: 1px solid #c62a2a;      /* Red border */
+    transform: scale(1.05);         /* Zoom effect */
+    position: relative;
+  }
+
+  .btn-danger.custom-hover:hover::before {
+    content: '';
+    background-color: #dc3545;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 4px;
+
+  }
+    .custom-hover {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .custom-hover:hover {
+    background-color: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    transform: scale(1.05);
+  }
+
+  .in-cart {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    transform: scale(1.05);
+  }
+   .order-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .order-card img {
+        max-height: 150px;
+        object-fit: cover;
+        width: 100%;
+        margin-bottom: 10px;
+    }

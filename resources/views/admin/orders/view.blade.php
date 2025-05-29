@@ -26,8 +26,8 @@
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </div>
-                                    <p class="mb-1"><strong>Customer:</strong> {{ $order->user->name ?? 'N/A' }}</p>
-                                    <p class="mb-1"><strong>Email:</strong> {{ $order->user->email ?? 'N/A' }}</p>
+                                    <p class="mb-1"><strong>Customer:</strong> {{ $profile->full_name  }}</p>
+                                    <p class="mb-1"><strong>Email:</strong> {{ $profile->email }}</p>
                                     <p class="mb-0"><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y h:i A') }}</p>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Delivery Information</h5>
                                     <p class="mb-1"><strong>Address:</strong></p>
-                                    <p class="mb-1">{{ optional($order->profile)->address ?? 'N/A' }}</p>
+                                    <p class="mb-1">{{ $profile->address ?? 'N/A' }}</p>
                                     <p class="mb-0"><strong>Total Amount:</strong> ₹{{ number_format($order->total_amount, 2) }}</p>
                                 </div>
                             </div>
@@ -65,6 +65,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($order->items as $item)
+                                                
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex px-2 py-1">

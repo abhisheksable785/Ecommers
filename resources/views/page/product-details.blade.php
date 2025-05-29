@@ -161,18 +161,19 @@
                                 <input type="hidden" name="size" id="selected-size" value="{{ $product->size }}">
                                 <input type="hidden" name="color" id="selected-color">
 
-                                <button type="submit" class="btn btn-danger w-75 py-3 fw-bold rounded-1">
-                                    <i class="bi bi-bag-fill me-2"></i> ADD TO BAG
-                                </button>
+                                <button type="submit" class="btn btn-danger w-75 py-3 fw-bold rounded-1 custom-hover">
+  <i class="fa-solid fa-bag-shopping"></i> ADD TO BAG + 1
+</button>
                             </form>
 
                             <form action="{{ route('wishlist.add') }}" method="POST" class="w-50">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <button type="submit"
-                                class="btn {{ $isWishlisted ? 'btn-success' : 'btn-outline-dark' }} w-75 py-3 fw-bold rounded-1"
+                                class="btn {{ $isWishlisted ? 'btn-dark'  : 'btn-outline-dark' }} w-75 py-3 fw-bold rounded-1"
                                 {{ $isWishlisted ? 'disabled' : '' }}>
-                                <i class="bi {{ $isWishlisted ? 'bi-check-circle-fill' : 'bi-heart' }} me-2"></i>
+                                 <i class="fa  {{ $isWishlisted ? 'fa-check-circle-fill' : ' fa-heart' }}"> <span> </span></i>
+                                {{-- <i class="bi {{ $isWishlisted ? 'bi-check-circle-fill' : 'bi-heart' }} me-2"></i> --}}
                                 {{ $isWishlisted ? 'WISHLISTED' : 'WISHLIST' }}
                             </button>
                             </form>

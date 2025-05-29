@@ -34,7 +34,7 @@ public function products()
                 ->withPivot('quantity', 'price_at_purchase');
 
 }
-public function user() {
+public function users() {
     return $this->belongsTo(User::class);
 }
 public function profile()
