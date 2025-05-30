@@ -12,6 +12,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\RazorpayController;
 use Illuminate\Support\Facades\Route;
 
 ///back
@@ -193,5 +194,12 @@ Route::get('/user-order', [OrderController::class, 'order'])->name('user.orders'
 
 Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoice.store');
 Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+
+
+Route::post('/payment/verify', [RazorpayController::class, 'verifyPayment'])->name('payment.verify');
+Route::post('/payment', [RazorpayController::class, 'payment'])->name('payment');
+Route::post('/checkout/place', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
+Route::match(['get', 'post'],'/payment/success', [CheckoutController::class, 'razorpaySuccess'])->name('razorpay.success');
+
 
 

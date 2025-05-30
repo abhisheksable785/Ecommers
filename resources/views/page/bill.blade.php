@@ -109,21 +109,19 @@
                                 <li>Subtotal <span>₹{{ number_format($subtotal, 2) }}</span></li>
                                 <li>Total <span>₹{{ number_format($subtotal, 2) }}</span></li>
                             </ul>
+<input type="hidden" name="payment_method" id="payment_method" value="">
 
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Check Payment
-                                    <input type="checkbox" id="payment">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="checkbox" id="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
+<!-- COD Submit -->
+<button type="submit" class="site-btn"
+    onclick="document.getElementById('payment_method').value='cash_on_delivery'">
+    Cash on Delivery
+</button>
+
+<!-- Razorpay Submit -->
+<button type="submit" class="site-btn mt-2"
+    onclick="document.getElementById('payment_method').value='online_payment'">
+    Pay with Razorpay
+</button>
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>
@@ -162,4 +160,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 @endsection

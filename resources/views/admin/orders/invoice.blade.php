@@ -93,7 +93,8 @@
                 <th>Total</th>
                 <td><strong>${{ number_format($invoice->total, 2) }}</strong></td>
             </tr>
-        </table>
+        </ta
+        `ble>
     </div>
     <div class="d-flex justify-content-end mt-4">
     <button class="btn btn-outline-primary" onclick="printInvoice()">

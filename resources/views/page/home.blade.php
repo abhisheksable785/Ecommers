@@ -1,82 +1,29 @@
 @extends('layout.front.app')
 @section('title', 'Home')
 @section('content')
-<style>
-    
 
-    .card {
-      width: 200;
-      background: rgb(225, 220, 220);
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-
-    .card-content {
-      padding: 16px;
-    }
-
-    .card-content h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .card-content p {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .add-to-cart {
-      margin-top: 12px;
-      padding: 10px;
-      width: 100%;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-
-    .add-to-cart:hover {
-      background-color: #0056b3;
-    }
-  </style>
     <!-- Hero Section Begin -->
     <section class="hero">
-         <div class="row">
-        <div class="col-8">
-           @if (session('success'))
-    <div class="alert alert-success" id="successAlert">
-        {{ session('success') }}
-    </div>
+        <div class="row">
+            <div class="col-8">
+                @if (session('success'))
+                    <div class="alert alert-success" id="successAlert">
+                        {{ session('success') }}
+                    </div>
 
-    <script>
-        // Hide success message after 3 seconds
-        setTimeout(function() {
-            var alertBox = document.getElementById('successAlert');
-            if (alertBox) {
-                alertBox.style.display = 'none';
-            }
-        }, 3000); // 3000ms = 3 seconds
-    </script>
-@endif
+                    <script>
+                        // Hide success message after 3 seconds
+                        setTimeout(function() {
+                            var alertBox = document.getElementById('successAlert');
+                            if (alertBox) {
+                                alertBox.style.display = 'none';
+                            }
+                        }, 3000); // 3000ms = 3 seconds
+                    </script>
+                @endif
 
+            </div>
         </div>
-    </div>
         <div class="hero__slider owl-carousel">
             <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
                 <div class="container">
@@ -130,16 +77,18 @@
             <div class="row">
 
                 @foreach ($categories as $category)
-                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4" class="card" style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4" class="card-product"
+                        style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
                         <div class="card text-center border-0 shadow-sm">
                             <div class="card-body p-2 d-flex flex-column align-items-center"
                                 style=" cursor: pointer;background-color: rgb(255, 255, 255); border-radius: 12px;transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 3px 5px 6px #000;">
                                 {{-- Category Image --}}
                                 <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
-                                    class="img-fluid mb-2 rounded" onclick="window.location.href='{{ route('category.products', $category->id) }}'"
+                                    class="img-fluid mb-2 rounded"
+                                    onclick="window.location.href='{{ route('category.products', $category->id) }}'"
                                     style="height: 160px; object-fit: contain; width: 200px; border-radius: 10px;">
 
-                                {{-- Category Name --}} 
+                                {{-- Category Name --}}
                                 <h6 class="fw-semibold text-dark mb-1">{{ $category->name }}</h6>
 
                                 {{-- Discount (example random here) --}}
@@ -156,7 +105,7 @@
                         </div>
                     </div>
                 @endforeach
-                
+
             </div>
         </div>
     </section>
@@ -174,73 +123,79 @@
                 </div>
             </div>
             <div class="row product__filter">
-               @foreach ($products as $product )
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="product__item" style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
-                <div class="product__item__pic set-bg"
-                     data-setbg="{{ asset('storage/' . $product->image) }}"
-                     style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
-                     onclick="window.location.href='{{ route('details.show', $product->id) }}'">
-                     
-                    <div class="product__actions" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
-                        <form action="{{ route('wishlist.add', $product->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" 
-                                    style="border: none; background: rgba(255,255,255,0.95); 
+                @foreach ($products as $product)
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                        <div class="product__item"
+                            style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
+                            <div class="product__item__pic set-bg" data-setbg="{{ asset('storage/' . $product->image) }}"
+                                style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
+                                onclick="window.location.href='{{ route('product.details', $product->id) }}'">
+
+                                <div class="product__actions"
+                                    style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
+                                    <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        <button type="submit"
+                                            style="border: none; background: rgba(255,255,255,0.95); 
                                            border-radius: 50%; width: 40px; height: 40px; 
                                            display: flex; align-items: center; justify-content: center;
                                            box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
                                            transform: translateY(0);">
-                                <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist" 
-                                     style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-                            </button>
-                        </form>
-                        <a href="simileir" 
-                           style="background: rgba(255,255,255,0.95); border-radius: 50%; 
+                                            <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist"
+                                                style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                                        </button>
+                                    </form>
+                                    <a href="simileir"
+                                        style="background: rgba(255,255,255,0.95); border-radius: 50%; 
                                   width: 40px; height: 40px; display: flex; align-items: center; 
                                   justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
                                   transition: all 0.2s ease; transform: translateY(0);">
-                            <img src="{{ asset('img/icon/compare.png') }}" alt="compare" 
-                                 style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-                        </a>
-                    </div>
-                </div>
+                                        <img src="{{ asset('img/icon/compare.png') }}" alt="compare"
+                                            style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                                    </a>
+                                </div>
+                            </div>
 
-                <div class="product__item__text" style="padding: 20px; position: relative;">
-                    <div style="margin-bottom: 12px;">
-                        <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
-                            <a href="{{ route('details.show', $product->id) }}" 
-                               style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
-                                {{ $product->name }}
-                            </a>
-                        </h6>
-                    </div>
-                    <h5 style="color: #3b82f6; font-weight: 700; margin: 0; font-size: 1.25rem;">
-                        ₹{{ number_format($product->price) }}
-                    </h5>
-                   
-                </div>
+                            <div class="product__item__text" style="padding: 20px; position: relative;">
+                                <div style="margin-bottom: 12px;">
+                                    <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
+                                        <a href="{{ route('product.details', $product->id) }}"
+                                            style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
+                                            {{ $product->name }}
+                                        </a>
+                                    </h6>
+                                </div>
+                                <h5 style="color: #3b82f6; font-weight: 700; margin: 0; font-size: 1.25rem;">
+                                    ₹{{ number_format($product->price) }}
+                                </h5>
 
-                <!-- Hover Effects -->
-                <style>
-                    .product__item:hover {
-                        transform: translateY(-5px);
-                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-                    }
-                    .product__item:hover .product__item__pic {
-                        transform: scale(1.03);
-                    }
-                    button:hover, .product__actions a:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 5px 12px rgba(0,0,0,0.2);
-                    }
-                    .product__item__text a:hover {
-                        color: #3b82f6;
-                    }
-                </style>
-            </div>
-        </div>
-    @endforeach
+                            </div>
+
+                            <!-- Hover Effects -->
+                            <style>
+                                .product__item:hover {
+                                    transform: translateY(-5px);
+                                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                                }
+
+                                .product__item:hover .product__item__pic {
+                                    transform: scale(1.03);
+                                }
+
+                                button:hover,
+                                .product__actions a:hover {
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+                                }
+
+                                .product__item__text a:hover {
+                                    color: #3b82f6;
+                                }
+                            </style>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>

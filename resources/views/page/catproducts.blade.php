@@ -6,25 +6,25 @@
     <section class="shop spad">
         <div class="container">
             <div class="row">
-        <div class="col-8">
-           @if (session('success'))
-    <div class="alert alert-success" id="successAlert">
-        {{ session('success') }}
-    </div>
+                <div class="col-8">
+                    @if (session('success'))
+                        <div class="alert alert-success" id="successAlert">
+                            {{ session('success') }}
+                        </div>
 
-    <script>
-        // Hide success message after 3 seconds
-        setTimeout(function() {
-            var alertBox = document.getElementById('successAlert');
-            if (alertBox) {
-                alertBox.style.display = 'none';
-            }
-        }, 3000); // 3000ms = 3 seconds
-    </script>
-@endif
+                        <script>
+                            // Hide success message after 3 seconds
+                            setTimeout(function() {
+                                var alertBox = document.getElementById('successAlert');
+                                if (alertBox) {
+                                    alertBox.style.display = 'none';
+                                }
+                            }, 3000); // 3000ms = 3 seconds
+                        </script>
+                    @endif
 
-        </div>
-    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
@@ -82,7 +82,8 @@
                                         <h3 class="mb-2 text-primary">Category: {{ $category->name }}</h3>
                                     @endif
 
-                                    <p>Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} results</p>
+                                    <p>Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of
+                                        {{ $products->total() }} results</p>
 
                                 </div>
                             </div>
@@ -111,23 +112,24 @@
                                     <div class="product__item__pic set-bg"
                                         data-setbg="{{ asset('storage/' . $product->image) }}"
                                         style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
-                                        onclick="window.location.href='{{ route('details.show', $product->id) }}'">
+                                        onclick="window.location.href='{{ route('product.details', $product->id) }}'">
 
                                         <div class="product__actions"
                                             style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
-                                                                  <form action="{{ route('wishlist.add') }}" method="POST" style="display:inline;">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    <button type="submit" data-product-id="{{ $product->id }}"
-            style="border: none; background: rgba(255,255,255,0.95); 
+                                            <form action="{{ route('wishlist.add') }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <button type="submit" data-product-id="{{ $product->id }}"
+                                                    style="border: none; background: rgba(255,255,255,0.95); 
                    border-radius: 50%; width: 40px; height: 40px; 
                    display: flex; align-items: center; justify-content: center;
                    box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
                    transform: translateY(0);">
-        <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist" 
-             style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-    </button>
-</form>
+                                                    <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist"
+                                                        style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
+                                                </button>
+                                            </form>
                                             <a href="simileir"
                                                 style="background: rgba(255,255,255,0.95); border-radius: 50%; 
                                   width: 40px; height: 40px; display: flex; align-items: center; 
@@ -142,7 +144,7 @@
                                     <div class="product__item__text" style="padding: 20px; position: relative;">
                                         <div style="margin-bottom: 12px;">
                                             <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
-                                                <a href="{{ route('details.show', $product->id) }}"
+                                                <a href="{{ route('product.details', $product->id) }}"
                                                     style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
                                                     {{ $product->name }}
                                                 </a>

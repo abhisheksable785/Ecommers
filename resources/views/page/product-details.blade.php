@@ -56,28 +56,28 @@
     </style>
     <div class="row">
         <div class="col-8">
-           @if (session('success'))
-    <div class="alert alert-success" id="successAlert">
-        {{ session('success') }}
-    </div>
+            @if (session('success'))
+                <div class="alert alert-success" id="successAlert">
+                    {{ session('success') }}
+                </div>
 
-    <script>
-        // Hide success message after 3 seconds
-        setTimeout(function() {
-            var alertBox = document.getElementById('successAlert');
-            if (alertBox) {
-                alertBox.style.display = 'none';
-            }
-        }, 3000); // 3000ms = 3 seconds
-    </script>
-@endif
+                <script>
+                    // Hide success message after 3 seconds
+                    setTimeout(function() {
+                        var alertBox = document.getElementById('successAlert');
+                        if (alertBox) {
+                            alertBox.style.display = 'none';
+                        }
+                    }, 3000); // 3000ms = 3 seconds
+                </script>
+            @endif
 
         </div>
     </div>
-    
+
     <section class="product-details spad">
         <div class="container">
-                <div class="row">
+            <div class="row">
                 <div class="col-lg-5">
                     <div class="product__details__pic">
                         <img id="mainProductImage" src="{{ asset('storage/' . $product->image) }}"
@@ -154,37 +154,38 @@
                         <!-- Action Buttons -->
                         <div class="container" style="margin: 0px; ">
                             <div class="d-flex mt-5 gap-2">
-                            <form action="{{ route('bag.add') }}" method="POST" class="w-50">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="price" value="{{ $product->price }}">
-                                <input type="hidden" name="size" id="selected-size" value="{{ $product->size }}">
-                                <input type="hidden" name="color" id="selected-color">
+                                <form action="{{ route('bag.add') }}" method="POST" class="w-50">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="price" value="{{ $product->price }}">
+                                    <input type="hidden" name="size" id="selected-size" value="{{ $product->size }}">
+                                    <input type="hidden" name="color" id="selected-color">
 
-                                <button type="submit" class="btn btn-danger w-75 py-3 fw-bold rounded-1 custom-hover">
-  <i class="fa-solid fa-bag-shopping"></i> ADD TO BAG + 1
-</button>
-                            </form>
+                                    <button type="submit" class="btn btn-danger w-75 py-3 fw-bold rounded-1 custom-hover">
+                                        <i class="fa-solid fa-bag-shopping"></i> ADD TO BAG + 1
+                                    </button>
+                                </form>
 
-                            <form action="{{ route('wishlist.add') }}" method="POST" class="w-50">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <button type="submit"
-                                class="btn {{ $isWishlisted ? 'btn-dark'  : 'btn-outline-dark' }} w-75 py-3 fw-bold rounded-1"
-                                {{ $isWishlisted ? 'disabled' : '' }}>
-                                 <i class="fa  {{ $isWishlisted ? 'fa-check-circle-fill' : ' fa-heart' }}"> <span> </span></i>
-                                {{-- <i class="bi {{ $isWishlisted ? 'bi-check-circle-fill' : 'bi-heart' }} me-2"></i> --}}
-                                {{ $isWishlisted ? 'WISHLISTED' : 'WISHLIST' }}
-                            </button>
-                            </form>
+                                <form action="{{ route('wishlist.add') }}" method="POST" class="w-50">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit"
+                                        class="btn {{ $isWishlisted ? 'btn-dark' : 'btn-outline-dark' }} w-75 py-3 fw-bold rounded-1"
+                                        {{ $isWishlisted ? 'disabled' : '' }}>
+                                        <i class="fa  {{ $isWishlisted ? 'fa-check-circle-fill' : ' fa-heart' }}"> <span>
+                                            </span></i>
+                                        {{-- <i class="bi {{ $isWishlisted ? 'bi-check-circle-fill' : 'bi-heart' }} me-2"></i> --}}
+                                        {{ $isWishlisted ? 'WISHLISTED' : 'WISHLIST' }}
+                                    </button>
+                                </form>
 
                             </div>
-                        
+
 
                         </div>
                         <div class="d-flex mt-5 gap-5">
                             <h5>Product Details :</h5>
-                           
+
                             {{ $product->description }}
                         </div>
                     </div>
@@ -192,58 +193,56 @@
             </div>
         </div>
     </section>
-    @endsection
+@endsection
 
-    <script>
-        // Size Selection
-        document.querySelectorAll('.size-select').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.size-select').forEach(btn => {
-                    btn.classList.remove('active', 'btn-primary');
-                    btn.classList.add('btn-outline-dark');
-                });
-                this.classList.add('active', 'btn-primary');
-                this.classList.remove('btn-outline-dark');
-                document.getElementById('selected-size').value = this.dataset.size;
+<script>
+    // Size Selection
+    document.querySelectorAll('.size-select').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.size-select').forEach(btn => {
+                btn.classList.remove('active', 'btn-primary');
+                btn.classList.add('btn-outline-dark');
             });
+            this.classList.add('active', 'btn-primary');
+            this.classList.remove('btn-outline-dark');
+            document.getElementById('selected-size').value = this.dataset.size;
         });
+    });
 
-        // Toast Notification
-        function showToast(message) {
-            const toast = document.querySelector('.toast-notification');
-            const toastMessage = document.getElementById('toast-message');
-            toastMessage.textContent = message;
-            toast.style.display = 'block';
+    // Toast Notification
+    function showToast(message) {
+        const toast = document.querySelector('.toast-notification');
+        const toastMessage = document.getElementById('toast-message');
+        toastMessage.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(hideToast, 3000);
+    }
+
+    function hideToast() {
+        document.querySelector('.toast-notification').style.display = 'none';
+    }
+
+    // Auto-hide toast after 3 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.querySelector('.toast-notification').style.display === 'block') {
             setTimeout(hideToast, 3000);
         }
-
-        function hideToast() {
-            document.querySelector('.toast-notification').style.display = 'none';
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Swiper for gallery slider if exists
+        if (document.querySelector('.gallery-slider')) {
+            const gallerySwiper = new Swiper('.gallery-slider', {
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                freeMode: true,
+            });
         }
-
-        // Auto-hide toast after 3 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            if (document.querySelector('.toast-notification').style.display === 'block') {
-                setTimeout(hideToast, 3000);
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Swiper for gallery slider if exists
-            if (document.querySelector('.gallery-slider')) {
-                const gallerySwiper = new Swiper('.gallery-slider', {
-                    slidesPerView: 'auto',
-                    spaceBetween: 10,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    freeMode: true,
-                });
-            }
-        });
-    </script>
-
-
+    });
+</script>
