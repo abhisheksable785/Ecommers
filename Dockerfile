@@ -22,22 +22,25 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy application files (DO THIS AFTER installing dependencies for Docker caching)
+# Copy app code
 COPY . .
 
-# Install PHP dependencies (production only)
-RUN composer install --no-dev --optimize-autoloader
+# Create .env if not present
+RUN cp .env.example .env || true
 
-# Generate Laravel app key and cache config (do this only if artisan is present)
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Laravel commands
 RUN php artisan key:generate && \
     php artisan config:cache && \
     php artisan route:cache
 
-# Set proper permissions
+# Permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port for Laravel server
+# Expose Laravel port
 EXPOSE 8000
 
-# Start Laravel development server
+# Start the server
 CMD php artisan serve --host=0.0.0.0 --port=8000
