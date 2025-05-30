@@ -1,5 +1,5 @@
-# Use PHP 8.2 image with common extensions
-FROM php:8.2-fpm
+# Use PHP 8.2 with FPM
+FROM php:8.2.12-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -13,28 +13,28 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
-    && docker-php-ext-configure zip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Install Composer globally
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Set the working directory
 WORKDIR /var/www
 
-# Copy your Laravel project files into the container
-COPY . .
+# Copy composer files separately for layer caching
+COPY composer.json composer.lock ./
 
-# Install PHP dependencies via Composer
+# Install PHP dependencies (no dev)
 RUN composer install --no-dev --optimize-autoloader
 
-# Set proper permissions
-RUN chmod -R 755 /var/www && chown -R www-data:www-data /var/www
+# Copy the rest of the application files
+COPY . .
 
-# Generate Laravel app key
-RUN php artisan key:generate
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose the port Laravel will run on
+# Expose Laravel port
 EXPOSE 8000
 
 # Start the Laravel application
