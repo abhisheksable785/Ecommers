@@ -25,6 +25,17 @@ WORKDIR /var/www
 # Copy all project files
 COPY . .
 
+
+# Ensure .env exists
+RUN cp .env.example .env || true
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# 👇 ADD THIS: Install Node dependencies and build assets
+RUN npm install && npm run build
+
+
 # Ensure .env exists
 RUN cp .env.example .env || true
 
@@ -43,4 +54,5 @@ CMD bash -c "\
     if ! grep -q ^APP_KEY= .env; then php artisan key:generate; fi && \
     php artisan config:cache && \
     php artisan storage:link && \
+    php artisan migrate --force && \
     php -S 0.0.0.0:8000 -t public"
