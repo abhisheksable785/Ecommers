@@ -13,8 +13,14 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    gnupg \
+    ca-certificates \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# ✅ Install Node.js and npm (Recommended: Node 18 LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 # Install Composer globally
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -25,22 +31,14 @@ WORKDIR /var/www
 # Copy all project files
 COPY . .
 
-
 # Ensure .env exists
 RUN cp .env.example .env || true
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# 👇 ADD THIS: Install Node dependencies and build assets
+# ✅ Install Node dependencies and build assets
 RUN npm install && npm run build
-
-
-# Ensure .env exists
-RUN cp .env.example .env || true
-
-# Install PHP dependencies without dev packages
-RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
@@ -54,5 +52,4 @@ CMD bash -c "\
     if ! grep -q ^APP_KEY= .env; then php artisan key:generate; fi && \
     php artisan config:cache && \
     php artisan storage:link && \
-    php artisan migrate --force && \
     php -S 0.0.0.0:8000 -t public"
