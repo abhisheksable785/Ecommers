@@ -72,7 +72,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->description = $request->description;
         $category->save();
-        return redirect()->route('category.list')->with('success', 'Category updated successfully!');
+        return redirect()->route('category.index')->with('success', 'Category updated successfully!');
     }
     public function view($id)
     {
@@ -90,10 +90,10 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->route('category.list')->with('success', 'Category deleted successfully!');
+        return redirect()->route('category.index')->with('success', 'Category deleted successfully!');
     }
     public function cathome(){
-        $products = Product::limit(8)->get();
+        $products = Product::limit(6)->get();
         $categories = tbl_category::all();
         return view('page.home', compact('categories','products'));
 
