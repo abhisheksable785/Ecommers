@@ -33,7 +33,8 @@ public function view($id)
 
 }
 public function order(){
-    $orders = Order::with(['items'])->get();
+
+    $orders = Order::with(['items'])->where('user_id', auth()->id())->get();
     // return $orders;
     return view('page.orders', compact('orders'));
 }
