@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 ///back
 // mysqld --skip-grant-tables --skip-external-locking
 
+
 Route::get("/dashboard", function () {
     return view("admin.dashboard");
 });
@@ -28,9 +29,10 @@ Route::get("/dashboard", function () {
 ///front
 ///front
 
-Route::get("/", function () {
+Route::get("/home", function () {
     return view("page.home");
-});
+})->name('home');
+
 // Route::get("/shop", function () {
 //     return view("page.shop");
 // });
@@ -82,6 +84,25 @@ Route::get("/users", function () {
 ///admin category
 ///admin category
 ///admin category
+Route::get('/test-google-config', function () {
+    return [
+        'client_id' => config('services.google.client_id'),
+        'client_secret' => config('services.google.client_secret'),
+        'redirect' => config('services.google.redirect'),
+    ];
+});
+Route::get('/auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
+
+Route::controller(AuthController::class)->group(function(){
+    Route::get('/login','showLoginForm')->name('loginform');
+    Route::post('/login', 'login')->name('login');
+    Route::get('/register','showRegisterForm');
+    Route::post('/register',  'register')->name('register');
+    Route::post('/logout-user','logout')->name('logout')->middleware('auth:sanctum');
+    
+
+});
 
 Route::controller(contactController::class)->group(function(){
 Route::get('/contact-ind','index')->name('contact.index');
@@ -128,15 +149,7 @@ Route::controller(ProductController::class)->group(function () {
 
 ///// login & sign Up
 
-Route::controller(AuthController::class)->group(function(){
-    Route::get('/login','showLoginForm')->name('loginform');
-    Route::post('/login', 'login')->name('login');
-    Route::get('/register','showRegisterForm');
-    Route::post('/register',  'register')->name('register');
-    Route::post('/logout','logout')->name('logout');
-    
 
-});
 Route::controller(WishlistController::class)->group(function(){
     Route::get('/wishlist', 'index')->name('wishlist.index');
     Route::post('/wishlist/add/{id}', 'addToWishlist')->name('wishlist.add');

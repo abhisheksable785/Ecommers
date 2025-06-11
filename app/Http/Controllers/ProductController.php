@@ -22,6 +22,15 @@ class ProductController extends Controller
      return view('admin.product.show-product', compact('products','count'));
 
  }
+ public function apiIndex(){
+    $products = Product::all();
+
+    return response()->json([
+        'status'=> true,
+        'message'=> 'Retrive all Products',
+        'data' => ['products' =>  $products]
+    ]);
+ }
 
  // Show single product
  //for admin page

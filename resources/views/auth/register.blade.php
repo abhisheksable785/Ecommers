@@ -12,9 +12,9 @@
         <div class="login-form">
             <h3 class="text-center mb-4">Register</h3>
 
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="alert alert-danger">{{ $errors->first() }}</div>
-            @endif
+            @endif --}}
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf

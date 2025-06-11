@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\tbl_category;
-use App\Models\tbl_contact;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = tbl_category::all();
-        return view('admin.category.category', compact('categories'));
+    public function index(Request $request)
+{
+    $categories = tbl_category::all();
+
+    // Agar request Postman/API se hai (expects JSON), toh JSON response do
+    if ($request->is('api/*') || $request->wantsJson()) {
+        return response()->json([
+            'status' => true,
+            'message' => 'Categories retrieved successfully',
+            'data' => ['cat' => $categories]
+        ]);
     }
+
+    // Warna normal website ke liye view return karo
+    return view('admin.category.category', compact('categories'));
+}
+
      public function shop(){
         $categories = tbl_category::all();
         return view('page.shop',compact('categories'));
@@ -45,7 +56,7 @@ class CategoryController extends Controller
         'description' => $request->description,
     ]);
 
-    return redirect()->route('category.list')->with('success', 'Category added successfully!');
+    return redirect()->route('category.view')->with('success', 'Category added successfully!');
 }
 
     public function edit($id)
@@ -93,7 +104,7 @@ class CategoryController extends Controller
         return redirect()->route('category.index')->with('success', 'Category deleted successfully!');
     }
     public function cathome(){
-        $products = Product::limit(6)->get();
+        $products = Product::limit(8)->get();
         $categories = tbl_category::all();
         return view('page.home', compact('categories','products'));
 

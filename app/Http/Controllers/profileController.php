@@ -22,6 +22,16 @@ class profileController extends Controller
 
     return view('page.profile', compact('profile'));
     }
+    
+    public function apiIndex(){
+        $profile = Profile::all();
+
+        return response()->json([
+            'status'=>true,
+            'message'=>'data retreive successfully',
+            'data'=> ['profile' => $profile]
+        ]);
+    }
   
 
  

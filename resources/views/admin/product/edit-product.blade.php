@@ -70,6 +70,7 @@
                     <option value="Men" {{ $product->gender == 'Men' ? 'selected' : '' }}>Men</option>
                     <option value="Women" {{ $product->gender == 'Women' ? 'selected' : '' }}>Women</option>
                     <option value="Unisex" {{ $product->gender == 'Unisex' ? 'selected' : '' }}>Unisex</option>
+                    
                 </select>
             </div>
 
