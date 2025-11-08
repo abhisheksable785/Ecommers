@@ -10,4 +10,9 @@ class tbl_category extends Model
     use HasFactory;
     protected $table = "tbl_category";
     protected $fillable = ['name', 'image', 'description'];
+
+ public function products()
+{
+    return $this->hasMany(Product::class, 'category', 'id');
+}
 }

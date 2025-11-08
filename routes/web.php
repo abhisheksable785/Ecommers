@@ -91,6 +91,9 @@ Route::get('/test-google-config', function () {
         'redirect' => config('services.google.redirect'),
     ];
 });
+
+// Route::get('/category/view/{id}', [CategoryController::class, 'getCategory'])->name('category.view.ajax');
+
 Route::get('/auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
 
@@ -112,19 +115,29 @@ Route::get('/contact/{id}', 'view')->name('contact.view');
 Route::delete('/contact/{id}', 'destroy')->name('contact.destroy');
 });
 
-Route::controller(CategoryController::class)->group(function(){
-    Route::get('/category',  'index')->name('category.index');
-    Route::get('/category/view/{id}',  'view')->name('category.view');
-    Route::view('/category/add',  'admin.category.add-cat')->name('category.add');
-    Route::post('/category/store', 'store')->name('category.store');
-    Route::get('/category/edit/{id}', 'edit')->name('category.edit');
-    Route::post('/category/update/{id}',  'update')->name('category.update');
-    Route::delete('/category/delete/{id}', 'destroy')->name('category.destroy');
-    Route::get('/shop',  'shop')->name('shop');
 
-    Route::get('/',  'cathome')->name('category.home');
+// Route::controller(CategoryController::class)->group(function(){
+//     Route::get('/category',  'index')->name('category.index');
+//     Route::get('/category/view/{id}',  'view')->name('category.view');
+//     Route::view('/category/add',  'admin.category.add-cat')->name('category.add');
+//     Route::post('/category/store', 'store')->name('category.store');
+//     Route::get('/category/edit/{id}', 'edit')->name('category.edit');
+//     Route::post('/category/update/{id}',  'update')->name('category.update');
+//     Route::delete('/category/delete/{id}', 'destroy')->name('category.destroy');
+//     Route::get('/shop',  'shop')->name('shop');
+
+//     Route::get('/',  'cathome')->name('category.home');
 
 
+// });
+
+// In routes/web.php
+Route::prefix('category')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('category.index');
+    Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('/view/{id}', [CategoryController::class, 'view'])->name('category.view');
+    Route::put('/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
 ///product Controller
 ///product

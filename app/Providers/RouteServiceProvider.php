@@ -11,20 +11,35 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to the "home" route for your application.
-     *
-     * Typically, users are redirected here after authentication.
+     * The default path users will be redirected to after login.
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/redirect-after-login';
+
+    /**
+     * Dynamic redirect based on role
+     */
+    public static function redirectTo(): string
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return route('login'); // This will return string, not redirect
+        }
+
+        return match ($user->role) {
+            'restaurant' => route('restaurant.dashboard'),
+            'employee'   => route('employee.dashboard'),
+            'admin'      => route('admin.dashboard'),
+            default      => route('dashboard'),
+        };
+    }
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->configureRateLimiting();
 
@@ -39,14 +54,16 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
+     * Configure rate limiting.
      */
-    protected function configureRateLimiting()
+    protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('auth', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
         });
     }
 }

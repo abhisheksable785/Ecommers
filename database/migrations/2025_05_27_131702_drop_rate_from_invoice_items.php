@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('invoice_items', function (Blueprint $table) {
             $table->dropColumn('rate');
+            $table->unsignedBigInteger('product_id')->after('invoice_id');
+            $table->foreign('product_id')->references('id')->on('tbl_product');
             // This will drop the 'rate' column from the 'invoice_items' table.
             // Ensure that this column is not used in any calculations or logic before dropping it.
         });

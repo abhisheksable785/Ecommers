@@ -26,7 +26,7 @@ public function index()
 public function view($id)
 {
     $order = Order::with(['users', 'items'])->findOrFail($id);
-        $profile= Profile::where('user_id',auth()->id())->first();
+        $profile= Profile::where('user_id',auth()->id())->first(); 
  
     
     return view('admin.orders.view', compact('order','profile'));

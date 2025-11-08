@@ -2,13 +2,15 @@
 @section('title','Product-list')
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Product List</h2>
 
-    <div class="card-header d-flex justify-content-between">
-        <a href="{{ route('products.create') }}" class="btn btn-black">
-            <span class="btn-label"><i class="fa fa-archive"></i></span> Add Product
-        </a>
-    </div>
+
+     <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                <h4 class="fw-bold mb-0" style="font-size: 28px;">📌 Product List</h4>
+                <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center">
+                    <i class="ti ti-plus me-1"></i> Add Product
+                </a>
+            </div>
+  
     <br>
 
     @if(session('success'))

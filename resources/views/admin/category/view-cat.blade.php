@@ -24,7 +24,7 @@
                 <img src="{{ asset($category->image) }}" width="150" height="150" alt="Category Image">
             </div>
 
-            <a href="{{ route('category.list') }}" class="btn btn-secondary mt-3">Back to List</a>
+            <a href="" class="btn btn-secondary mt-3">Back to List</a>
         </div>
     </div>
 </div>

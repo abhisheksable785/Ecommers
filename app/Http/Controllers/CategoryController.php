@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Product;
 use App\Models\tbl_category;
 use Illuminate\Http\Request;
@@ -9,91 +7,108 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-{
-    $categories = tbl_category::all();
-
-    // Agar request Postman/API se hai (expects JSON), toh JSON response do
-    if ($request->is('api/*') || $request->wantsJson()) {
-        return response()->json([
-            'status' => true,
-            'message' => 'Categories retrieved successfully',
-            'data' => ['cat' => $categories]
-        ]);
+    {
+        $categories = tbl_category::withCount('products')->get();
+        
+        // If request is from API/Postman, return JSON
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Categories retrieved successfully',
+                'data' => ['cat' => $categories]
+            ]);
+        }
+        
+        // Return view for web
+        return view('admin.category.index', compact('categories'));
     }
 
-    // Warna normal website ke liye view return karo
-    return view('admin.category.category', compact('categories'));
-}
+    // FIXED: This method fetches category data for edit modal
+    public function view($id)
+    {
+        $category = tbl_category::findOrFail($id);
+        
+        // Return JSON for AJAX requests
+        if (request()->ajax()) {
+            return response()->json($category);
+        }
+        
+        // Return view for normal requests
+        return view('admin.category.view-cat', compact('category'));
+    }
 
-     public function shop(){
+    public function shop()
+    {
         $categories = tbl_category::all();
-        return view('page.shop',compact('categories'));
-     }
-    
-  
-   
+        return view('page.shop', compact('categories'));
+    }
 
     public function create()
     {
         return view('admin.category.add-cat');
     }
-   
- public function store(Request $request)
-{
-    $request->validate([
-    'name' => 'required|unique:tbl_category|max:255',
-    'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-    'description' => 'nullable|string',
-]);
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:tbl_category|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'description' => 'nullable|string',
+        ]);
 
-    $imageName = time().'.'.$request->image->extension();
-    $request->image->move(public_path('uploads/category'), $imageName);
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads/category'), $imageName);
 
-    tbl_category::create([
-        'name' => $request->name,
-        'image' => 'uploads/category/'.$imageName,
-        'description' => $request->description,
-    ]);
+        tbl_category::create([
+            'name' => $request->name,
+            'image' => 'uploads/category/' . $imageName,
+            'description' => $request->description,
+        ]);
 
-    return redirect()->route('category.view')->with('success', 'Category added successfully!');
-}
+        return redirect()->route('category.index')->with('success', 'Category added successfully!');
+    }
 
     public function edit($id)
     {
         $category = tbl_category::findOrFail($id);
         return view('admin.category.edit-cat', compact('category'));
     }
+
+    // FIXED: Update method with proper image handling
     public function update(Request $request, $id)
     {
         $category = tbl_category::findOrFail($id);
-
+        
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:tbl_category,name,' . $id,
             'description' => 'nullable|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
         // Update Image if new one is uploaded
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $category->image = 'storage/' . $imagePath;
+            // Delete old image
+            if (file_exists(public_path($category->image))) {
+                unlink(public_path($category->image));
+            }
+            
+            // Upload new image
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads/category'), $imageName);
+            $category->image = 'uploads/category/' . $imageName;
         }
 
         $category->name = $request->name;
         $category->description = $request->description;
         $category->save();
+
         return redirect()->route('category.index')->with('success', 'Category updated successfully!');
     }
-    public function view($id)
-    {
-        $category = tbl_category::findOrFail($id);
-        return view('admin.category.view-cat', compact('category'));
-    }
+
     public function destroy($id)
     {
         $category = tbl_category::findOrFail($id);
-
+        
         // Delete Image from Storage
         if (file_exists(public_path($category->image))) {
             unlink(public_path($category->image));
@@ -103,13 +118,11 @@ class CategoryController extends Controller
 
         return redirect()->route('category.index')->with('success', 'Category deleted successfully!');
     }
-    public function cathome(){
+
+    public function cathome()
+    {
         $products = Product::limit(8)->get();
         $categories = tbl_category::all();
-        return view('page.home', compact('categories','products'));
-
-
+        return view('page.home', compact('categories', 'products'));
     }
-
-
 }
