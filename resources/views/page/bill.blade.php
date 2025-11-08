@@ -78,16 +78,16 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
-                                    <p>Phone<span>*</span></p>
+                                    <p>Mobile Number<span>*</span></p>
                                     <input type="text" id="phone" name="mobile_number" maxlength="10"
-                                        value="{{ old('phone', $profile->mobile_number) }}">
+                                        value="{{ old('phone', $profile->mobile_number ?? 'N/A') }}">
                                 </div>
                             </div>  
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Email<span>*</span></p>
                                     <input type="email" id="email" name="email"
-                                        value="{{ old('email', $profile->email ?? '') }}">
+                                        value="{{ old('email', $profile->email ?? 'example@gmail.com') }}">
                                 </div>
                             </div>
                         </div>

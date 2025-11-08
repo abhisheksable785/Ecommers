@@ -130,7 +130,7 @@
                         <span class="menu-header-text">Menu</span>
                     </li>
                     <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
-                        <a href="dashboard" class="menu-link">
+                        <a href="{{ route('admin.dashboard') }}" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-home"></i>
                             <div data-i18n="Dashboard">Dashboard</div>
                         </a>
@@ -168,8 +168,8 @@
                       </a>
                     </li>
                     <li class="menu-item">
-                      <a href="app-ecommerce-order-details.html" class="menu-link">
-                        <div data-i18n="">Order Details</div>
+                      <a href="" class="menu-link">
+                        <div data-i18n="Order Details">Order Details</div>
                       </a>
                     </li>
                   </ul>
@@ -217,7 +217,7 @@
 
 
 
-                    <li class="menu-item {{ request()->routeIs('products.index', '') ? ' open' : '' }}">
+                    {{-- <li class="menu-item {{ request()->routeIs('products.index', '') ? ' open' : '' }}">
                         <a href="{{ route('products.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-confetti"></i> <!-- Festival icon -->
                             <div data-i18n="Product ">Product </div>
@@ -248,7 +248,7 @@
                             <i class="menu-icon tf-icons ti ti-shopping-cart"></i> <!-- All Questions icon -->
                             <div data-i18n="Order List">Order List</div>
                         </a>
-                    </li>
+                    </li> --}}
 
 
 
@@ -344,7 +344,7 @@
 
 
 
-                    <li class="menu-item  {{ request()->routeIs('admin.employees.index') ? 'active' : '' }}">
+                    {{-- <li class="menu-item  {{ request()->routeIs('admin.employees.index') ? 'active' : '' }}">
                         <a href= "" class="menu-link">
                             <i class="menu-icon fa-solid fa-user-tie"></i>
                             <div data-i18n="Employee List"> Employee List </div>
@@ -371,7 +371,7 @@
                             <i class="menu-icon tf-icons ti ti-users"></i> <!-- Leads icon -->
                             <div data-i18n="Todays Leads"> Todays Leads</div>
                         </a>
-                    </li>
+                    </li> --}}
 {{--
                     <li class="menu-item {{ request()->routeIs('admin.todaysleads.index') ? 'active' : '' }}">
                         <a href="{{ route('admin.todaysleads.index') }}" class="menu-link">
@@ -394,7 +394,7 @@
                     </li> --}}
 
 
-                    <li class="menu-item {{ request()->routeIs('call-logs.index') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ request()->routeIs('call-logs.index') ? 'active' : '' }}">
                         <a href="" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-phone"></i> <!-- Leads icon -->
                             <div data-i18n="Employee-Call-Logs">Employee-Call-Logs</div>
@@ -407,7 +407,7 @@
                             <i class="menu-icon tf-icons ti ti-phone"></i> <!-- Leads icon -->
                             <div data-i18n="Admin-Call-Logs">Admin-Call-Logs</div>
                         </a>
-                    </li>
+                    </li> --}}
 
 
                     {{-- <li
@@ -529,11 +529,11 @@
                                             {{ $greeting ?? 'Welcome' }},
                                         </span>
                                         <span class="fw-medium text-dark" style="font-size: 1.2rem;">
-                                            {{-- @if (auth('admin')->check())
+                                            @if (auth('admin')->check())
                                                 {{ auth('admin')->user()->name }} 👋
                                             @else
                                                 Guest 👋
-                                            @endif --}}
+                                            @endif
                                         </span>
                                     </div>
 
@@ -830,17 +830,29 @@
                                     data-bs-toggle="dropdown">
                                     {{-- class="avatar avatar-online" --}}
                                     <div >
-                                        {{--  --}}
+                                        @auth('admin')
+                                           @if (Auth::guard('admin')->user()->photo)
+                                                <img src="{{ asset('uploads/' . Auth::guard('admin')->user()->photo) }}"
+                                                    style="width:40px; height:40px; object-fit:cover; border-radius:50%;"
+                                                    alt="Admin Avatar">
+                                            @else
+                                                {{-- <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Default Avatar"
+                                                    class="h-auto rounded-circle" /> --}}
+                                                <img src="{{ asset('assets/img/avatars/1.png') }}"
+                                                    style="width:40px; height:40px; object-fit:cover; border-radius:50%;"
+                                                    alt="Admin Avatar">
+                                            @endif
+                                        @endauth
 
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="">
+                                        <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar ">
-                                                        {{-- @auth('admin')
+                                                        @auth('admin')
                                                             @if (Auth::guard('admin')->user()->photo)
                                                                 <img src="{{ asset('uploads/' . Auth::guard('admin')->user()->photo) }}"
                                                                     style="width:50px; height:50px; object-fit:cover; border-radius:50%;"
@@ -849,16 +861,16 @@
                                                                 <img src="{{ asset('assets/img/avatars/1.png') }}"
                                                                     alt="Default Avatar" class="h-auto rounded-circle" />
                                                             @endif
-                                                        @endauth --}}
+                                                        @endauth
 
                                                     </div>
                                                 </div>
-                                                {{-- <div class="flex-grow-1">
+                                                <div class="flex-grow-1">
                                                     <span
-                                                        class="fw-medium d-block">{{ Auth::guard('admin')->user()->name }}</span>
+                                                        class="fw-medium d-block">{{ Auth::guard('admin')->user()->name ?? 'N/A' }}</span>
                                                     <small
-                                                        class="text-muted">{{ Auth::guard('admin')->user()->email }}</small>
-                                                </div> --}}
+                                                        class="text-muted">{{ Auth::guard('admin')->user()->email  ?? 'N/A' }}</small>
+                                                </div>
                                             </div>
                                         </a>
                                     </li>
@@ -866,7 +878,7 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="">
+                                        <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
                                             <i class="ti ti-user-check me-2 ti-sm"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>
@@ -877,44 +889,28 @@
                         <span class="align-middle">Settings</span>
                       </a>
                     </li> --}}
-                                    {{-- <li>
-                      <a class="dropdown-item" href="pages-account-settings-billing.html">
-                        <span class="d-flex align-items-center align-middle">
-                          <i class="flex-shrink-0 ti ti-credit-card me-2 ti-sm"></i>
-                          <span class="flex-grow-1 align-middle">Billing</span>
-                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-label-danger w-px-20 h-px-20"
-                            >2</span
-                          >
-                        </span>
-                      </a>
-                    </li> --}}
+                                    
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
-                                    {{-- <li>
-                      <a class="dropdown-item" href="pages-faq.html">
-                        <i class="ti ti-help me-2 ti-sm"></i>
-                        <span class="align-middle">FAQ</span>
-                      </a>
-                    </li> --}}
-                                    {{-- <li>
-                      <a class="dropdown-item" href="pages-pricing.html">
-                        <i class="ti ti-currency-dollar me-2 ti-sm"></i>
-                        <span class="align-middle">Pricing</span>
-                      </a>
-                    </li> --}}
+                                   
 
                                     <li>
-                                        <form method="POST" action="">
+                                        <form method="POST" action="{{ route('admin.logout') }}">
                                             @csrf
 
-                                            <a class="dropdown-item" href=""
+                                            <a class="dropdown-item" href="{{ route('admin.logout') }}"
                                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                                 <i class="ti ti-logout me-2 ti-sm"></i>
                                                 <span class="align-middle">Log Out</span>
                                             </a>
                                         </form>
                                     </li>
+                                </ul>
+                            </li>
+                            
+
+                                    
                                 </ul>
                             </li>
 

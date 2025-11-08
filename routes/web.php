@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Admin\AdminController;
 use Faker\Guesser\Name;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BagController;
@@ -15,27 +17,11 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\RazorpayController;
 use Illuminate\Support\Facades\Route;
 
-///back
-///back
-///back
-// mysqld --skip-grant-tables --skip-external-locking
 
 
-Route::get("/dashboard", function () {
-    return view("admin.dashboard");
-});
+    Route::get('/', [CategoryController::class, 'cathome'])->name('category.home');
 
-///front
-///front
-///front
 
-Route::get("/home", function () {
-    return view("page.home");
-})->name('home');
-
-// Route::get("/shop", function () {
-//     return view("page.shop");
-// });
 
 Route::get("/about", function () {
     return view("page.about");
@@ -71,6 +57,46 @@ Route::get("/users", function () {
 
 
 
+
+
+// Admin Routes Group
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    // ============================================
+    // GUEST ROUTES - Only accessible if NOT logged in
+    // Uses 'admin.guest' middleware
+    // ============================================
+    Route::middleware(['admin.guest'])->group(function () {
+        Route::get('/login', [AdminController::class, 'loginPage'])->name('login');
+        Route::post('/login', [AdminController::class, 'login'])->name('login.submit');
+    });
+
+    // ============================================
+    // PROTECTED ROUTES - Only accessible if LOGGED IN
+    // Uses 'admin.auth' middleware
+    // ============================================
+    Route::middleware(['admin.auth'])->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [AdminController::class, 'show'])->name('profile.show');
+        Route::get('/info',[AdminController::class , 'master']);
+        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+        Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/password/update', [AdminController::class, 'updatePassword'])->name('password.update');
+        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+
+
+        
+            Route::get('/products',[ProductController::class ,'index'])->name('products.index');
+            Route::get('/add-product',[ProductController::class ,'create'])->name('products.create');
+            Route::post('/add-product',[ProductController::class ,'store'] )->name('products.store');
+            Route::delete('/products/{id}',[ProductController::class ,'destroy'])->name('products.destroy');
+            Route::get('/products/{id}/edit', [ProductController::class ,'edit'])->name('products.edit');
+            Route::put('/products/{id}', [ProductController::class ,'update'])->name('products.update');
+            Route::get('/products/{id}',[ProductController::class ,'show'])->name('products.show');
+        
+    });
+
+});
 // Route::controller(Controller::class)->group(function(){
 //     Route::get('/shop/{id}', 'shop')->name('shop.cat');
 //     Route::post('/contact_list', 'contact');
@@ -84,13 +110,13 @@ Route::get("/users", function () {
 ///admin category
 ///admin category
 ///admin category
-Route::get('/test-google-config', function () {
-    return [
-        'client_id' => config('services.google.client_id'),
-        'client_secret' => config('services.google.client_secret'),
-        'redirect' => config('services.google.redirect'),
-    ];
-});
+// Route::get('/test-google-config', function () {
+//     return [
+//         'client_id' => config('services.google.client_id'),
+//         'client_secret' => config('services.google.client_secret'),
+//         'redirect' => config('services.google.redirect'),
+//     ];
+// });
 
 // Route::get('/category/view/{id}', [CategoryController::class, 'getCategory'])->name('category.view.ajax');
 
@@ -119,7 +145,6 @@ Route::delete('/contact/{id}', 'destroy')->name('contact.destroy');
 // Route::controller(CategoryController::class)->group(function(){
 //     Route::get('/category',  'index')->name('category.index');
 //     Route::get('/category/view/{id}',  'view')->name('category.view');
-//     Route::view('/category/add',  'admin.category.add-cat')->name('category.add');
 //     Route::post('/category/store', 'store')->name('category.store');
 //     Route::get('/category/edit/{id}', 'edit')->name('category.edit');
 //     Route::post('/category/update/{id}',  'update')->name('category.update');
@@ -131,10 +156,14 @@ Route::delete('/contact/{id}', 'destroy')->name('contact.destroy');
 
 // });
 
+
 // In routes/web.php
 Route::prefix('category')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::view('/category/add',  'admin.category.add-cat')->name('category.create');
+
+
     Route::get('/view/{id}', [CategoryController::class, 'view'])->name('category.view');
     Route::put('/update/{id}', [CategoryController::class, 'update'])->name('category.update');
     Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
@@ -160,6 +189,7 @@ Route::controller(ProductController::class)->group(function () {
     // Route::get('/',[ProductController::class, 'home'])->name('products.home');
 });
 
+
 ///// login & sign Up
 
 
@@ -179,10 +209,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/users', [AuthController::class, 'index'])->name('users.index');
-
-Route::middleware('auth')->get('/dashboard', function () {
-    return view('admin.dashboard');
-});
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');

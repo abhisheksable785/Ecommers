@@ -10,11 +10,21 @@ class OrderController extends Controller
 {
 public function index()
 {
-    $orders = Order::with(['users','items'])->paginate(15);
-    $profile = Profile::where('user_id',auth()->id())->first();
-    //  return $orders; // No need to eager load products here
-    return view('admin.orders.index', compact('orders','profile'));
+    $orders = Order::with(['user', 'items'])->latest()->paginate(15);
+    
+    // Calculate stats for widgets
+    $totalPending = Order::where('status', 'pending')->count();
+    $totalCompleted = Order::where('status', 'completed')->count();
+    $totalRefunded = Order::where('status', 'refunded')->count();
+    $totalFailed = Order::where('status', 'failed')->count();
 
+    return view('admin.orders.index', compact(
+        'orders', 
+        'totalPending', 
+        'totalCompleted', 
+        'totalRefunded', 
+        'totalFailed'
+    ));
 }
 // public function view($id)
 // {
@@ -25,12 +35,14 @@ public function index()
 // }
 public function view($id)
 {
-    $order = Order::with(['users', 'items'])->findOrFail($id);
-        $profile= Profile::where('user_id',auth()->id())->first(); 
- 
-    
-    return view('admin.orders.view', compact('order','profile'));
+    // Eager load the user (customer), their profile, and the order items with product details
+    // Assuming relationships: Order belongsTo User, User hasOne Profile, Order hasMany OrderItem, OrderItem belongsTo Product
+    $order = Order::with(['user', 'items.product'])->findOrFail($id);
 
+    // Try to find the profile associated with the order's user
+    $userProfile = \App\Models\Profile::where('user_id', $order->user_id)->first();
+
+    return view('admin.orders.view', compact('order', 'userProfile'));
 }
 public function order(){
 
