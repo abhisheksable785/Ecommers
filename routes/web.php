@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Api\SliderController;
 use Faker\Guesser\Name;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BagController;
@@ -132,6 +133,10 @@ Route::controller(AuthController::class)->group(function(){
     
 
 });
+
+Route::get('/admin/sliders', [SliderController::class, 'showSliderPage'])->name('admin.sliders');
+Route::delete('/slider/delete/{id}', [SliderController::class, 'delete']);
+
 
 Route::controller(contactController::class)->group(function(){
 Route::get('/contact-ind','index')->name('contact.index');

@@ -234,21 +234,21 @@
 
                     </li>
 
-                    <li
+                    {{-- <li
                         class="menu-item {{ request()->routeIs('affair.index', 'affair-post.index') ? 'active open' : '' }}">
                         <a href="{{ route('coupons.index') }}" class="menu-link ">
                             <i class="menu-icon tf-icons ti ti-discount"></i> <!-- Custom icon -->
                             <div data-i18n="Coupons">Coupons</div>
                         </a>
 
-                    </li>
+                    </li> --}}
 
                     <li class="menu-item {{ request()->routeIs('all_questions.index') ? 'active' : '' }}">
-                        <a href="{{ route('orders.index') }}" class="menu-link">
+                        <a href="{{ route('admin.sliders') }}" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-shopping-cart"></i> <!-- All Questions icon -->
-                            <div data-i18n="Order List">Order List</div>
+                            <div data-i18n="App Slider "></div>
                         </a>
-                    </li> --}}
+                    </li>
 
 
 

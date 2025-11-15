@@ -83,21 +83,32 @@ public function index(Request $request)
     ));
 }
 
-    public function apiIndex()
-    {
-        $products = Product::all();
+public function apiIndex()
+{
+    $products = Product::all();
 
+    return response()->json([
+        'status' => true,
+        'message' => 'Retrieve all Products',
+        'data' => ['products' => $products]
+    ]);
+}
+
+    // Show single product (admin)
+   public function show($id , Request $request)
+{
+    $product = Product::where('status','published')->findOrFail($id);
+
+    
+    if($request->is('*/api') || $request->wantsJson()){
         return response()->json([
             'status' => true,
-            'message' => 'Retrieve all Products',
-            'data' => ['products' => $products]
+            'message' => 'Product details retrieved successfully',
+            'data' => ['product' => $product]
         ]);
     }
 
-    // Show single product (admin)
-   public function show($id)
-{
-    $product = Product::findOrFail($id);
+    
     // Fetch categories so the read-only dropdown can display the correct name
     $categories = tbl_category::all();
 

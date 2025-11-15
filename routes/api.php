@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\SliderController;
+use App\Http\Controllers\AuthApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -32,8 +34,18 @@ Route::controller(AuthController::class)->group(function(){
     
 });
 
+Route::post('/user-register',[AuthApiController::class , 'store']);
+Route::post('/user-login',[AuthApiController::class , 'userLogin']);
+
+
+
+Route::post('/slider/store', [SliderController::class, 'store']);
+Route::get('/slider/list', [SliderController::class, 'index']);
+
 Route::get('/category-list',[CategoryController::class , 'index']);
 Route::get('/product-list',[ProductController::class , 'apiIndex']);
+
+Route::get('/produt-details/{id}',[ProductController::class , 'show']);
 Route::get('/profile-list',[profileController::class , 'apiIndex']);
 
 
