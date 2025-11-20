@@ -30,13 +30,13 @@ class AddToCardController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
             // Check if user is authenticated
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Please login to add items to your bag',
@@ -45,7 +45,7 @@ class AddToCardController extends Controller
 
             // Check product stock
             $product = Product::find($request->product_id);
-            if (!$product) {
+            if (! $product) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Product not found',
@@ -70,7 +70,7 @@ class AddToCardController extends Controller
             if ($bagItem) {
                 // Update quantity
                 $newQuantity = $bagItem->quantity + $request->quantity;
-                
+
                 // Check max quantity
                 if ($newQuantity > 10) {
                     return response()->json([
@@ -117,14 +117,14 @@ class AddToCardController extends Controller
                 'data' => [
                     'bag_item' => $bagItem,
                     'cart_count' => $cartCount,
-                ]
+                ],
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to add product to bag',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -135,7 +135,7 @@ class AddToCardController extends Controller
     public function getBag()
     {
         try {
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Please login to view your bag',
@@ -146,7 +146,7 @@ class AddToCardController extends Controller
                 ->where('user_id', Auth::id())
                 ->get();
 
-            $subtotal = $bagItems->sum(function($item) {
+            $subtotal = $bagItems->sum(function ($item) {
                 return $item->price_at_purchase * $item->quantity;
             });
 
@@ -156,14 +156,14 @@ class AddToCardController extends Controller
                     'items' => $bagItems,
                     'subtotal' => $subtotal,
                     'count' => $bagItems->count(),
-                ]
+                ],
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch bag items',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -181,12 +181,12 @@ class AddToCardController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Please login',
@@ -197,7 +197,7 @@ class AddToCardController extends Controller
                 ->where('user_id', Auth::id())
                 ->first();
 
-            if (!$bagItem) {
+            if (! $bagItem) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Item not found in bag',
@@ -226,14 +226,14 @@ class AddToCardController extends Controller
                 'data' => [
                     'bag_item' => $bagItem,
                     'subtotal' => $subtotal,
-                ]
+                ],
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update quantity',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -248,7 +248,7 @@ class AddToCardController extends Controller
                 ->where('user_id', Auth::id())
                 ->first();
 
-            if (!$bagItem) {
+            if (! $bagItem) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Item not found in bag',
@@ -264,14 +264,14 @@ class AddToCardController extends Controller
                 'message' => 'Item removed from bag',
                 'data' => [
                     'cart_count' => $cartCount,
-                ]
+                ],
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to remove item',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -282,7 +282,7 @@ class AddToCardController extends Controller
     public function clearBag()
     {
         try {
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Please login',
@@ -300,7 +300,7 @@ class AddToCardController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to clear bag',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -311,10 +311,10 @@ class AddToCardController extends Controller
     public function getCartCount()
     {
         try {
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return response()->json([
                     'success' => true,
-                    'data' => ['count' => 0]
+                    'data' => ['count' => 0],
                 ], 200);
             }
 
@@ -322,14 +322,14 @@ class AddToCardController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => ['count' => $count]
+                'data' => ['count' => $count],
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to get cart count',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

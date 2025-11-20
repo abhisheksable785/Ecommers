@@ -41,7 +41,6 @@ Route::post('/profile/store', [ProfileController::class, 'store'])->middleware('
 route::get('/profile/info', [ProfileController::class, 'index'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->post('/checkout/place-order', [CheckoutController::class, 'placeOrderApi']);
 
-
 Route::post('/slider/store', [SliderController::class, 'store']);
 Route::get('/slider/list', [SliderController::class, 'index']);
 
