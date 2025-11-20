@@ -13,6 +13,106 @@ use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
+
+    private function generateOrderNumber()
+{
+    $prefix = 'ORD-' . date('Y');
+    $latestOrder = Order::where('order_number', 'LIKE', "$prefix-%")
+                        ->orderBy('id', 'DESC')
+                        ->first();
+
+    if (!$latestOrder) {
+        return $prefix . '-00001';
+    }
+
+    $lastNumber = (int) str_replace($prefix . '-', '', $latestOrder->order_number);
+    $newNumber = $lastNumber + 1;
+
+    return $prefix . '-' . str_pad($newNumber, 5, '0', STR_PAD_LEFT);
+}
+
+
+public function placeOrderApi(Request $request)
+{
+    $cartItems = AddToBag::with('product')
+        ->where('user_id', auth()->id())
+        ->get();
+
+    if ($cartItems->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Your cart is empty'
+        ], 400);
+    }
+
+    $total = $cartItems->sum(fn($item) => $item->price_at_purchase * $item->quantity);
+
+    $request->validate([
+        'full_name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'mobile_number' => 'required|numeric|max_digits:10',
+        'address' => 'required|string|max:255',
+        'city' => 'required|string|max:100',
+        'state' => 'required|string|max:100',
+        'country' => 'required|string|max:100',
+        'zipcode' => 'required|string|max:10',
+        'payment_method' => 'required|string|in:cash_on_delivery,online',
+    ]);
+
+    // ⭐ CASH ON DELIVERY
+    if ($request->payment_method === 'cash_on_delivery') {
+
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'order_number' => $this->generateOrderNumber(),
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'mobile_number' => $request->mobile_number,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'pincode' => $request->zipcode,
+            'total_amount' => $total,
+            'payment_method' => 'cash_on_delivery',
+
+            // ⭐ REQUIRED FIELDS ADDED
+            'payment_status' => 'pending',
+            'status' => 'pending',
+            'order_date' => now(),
+        ]);
+
+        foreach ($cartItems as $item) {
+            OrderItems::create([
+                'order_id' => $order->id,
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price_at_purchase' => $item->price_at_purchase,
+            ]);
+        }
+
+        AddToBag::where('user_id', auth()->id())->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Order placed successfully!',
+            'order_id' => $order->id
+        ]);
+    }
+
+    // ⭐ ONLINE PAYMENT (Later Razorpay integration)
+    if ($request->payment_method === 'online') {
+        return response()->json([
+            'success' => true,
+            'message' => 'Online payment not yet implemented',
+        ]);
+    }
+}
+
+
+
+
+
     public function checkout()
 {
     

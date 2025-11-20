@@ -16,9 +16,17 @@ class profileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $response)
     {
          $profile= Profile::where('user_id',auth()->id())->first();
+
+         if($response->is('*api/')|| $response->wantsJson()){
+        return response()->json([
+            'status'=>true,
+            'message'=>'data retreive successfully',
+            'data'=> ['profile' => $profile]
+        ]);
+         }
 
     return view('page.profile', compact('profile'));
     }
