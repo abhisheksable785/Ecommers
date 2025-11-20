@@ -50,9 +50,6 @@ public function delete($id)
             'image' => 'slider/' . $imageName
         ]);
 
-        return response()->json([
-            "status" => true,
-            "message" => "Slider uploaded",
-        ]);
+        return back()->with('success', 'Slider Added Successfully');
     }
 }

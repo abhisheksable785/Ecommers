@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthApiController extends Controller
 {
@@ -14,6 +15,34 @@ class AuthApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function googleLogin(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'name' => 'required',
+        'google_id' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'google_id' => $request->google_id,
+            'profile' => $request->profile,
+            'password' => bcrypt(Str::random(16)),
+        ]);
+    }
+
+    $token = $user->createToken("google-token")->plainTextToken;
+
+    return response()->json([
+        "success" => true,
+        "token" => $token,
+        "user" => $user
+    ]);
+}
 
     public function userLogin(Request $request)
     {
@@ -38,6 +67,7 @@ class AuthApiController extends Controller
             'message' => 'User logged in successfully',
             'token' => $token,
             'token_type' => 'Bearer',
+            'user'=>$user,
         ], 200);
     }
     public function index()
@@ -121,8 +151,23 @@ class AuthApiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function logout(Request $request)
+{
+    try {
+        // Delete the token that was used for the current request
+        // $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully',
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to logout',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 }

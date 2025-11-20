@@ -51,34 +51,40 @@ class profileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-    //    return $request;
-        $user = auth()->user();
-           $request->validate([
-        'full_name' => 'required|string|max:255',
-        'mobile_number' => 'required|numeric',
-        'email' => 'required|email',
-        'birthday' => 'required|date',
-        'address' => 'required|string',
-        'city' => 'required|string',
-        'pincode' => 'required|numeric',
+  public function store(Request $request)
+{
+    $user = auth()->user();
+
+    // Validation
+    $validated = $request->validate([
+        'full_name'     => 'required|string|max:255',
+        'mobile_number' => 'required|numeric|unique:profile,mobile_number',
+        'email'         => 'required|email',
+        'birthday'      => 'required|date',
+        'address'       => 'required|string',
+        'city'          => 'required|string',
+        'pincode'       => 'required|numeric',
     ]);
-           Profile::updateOrCreate(
-        ['user_id' => $user->id], // Search condition
-        [ // Data to update or insert
-            'full_name' => $request->full_name,
-            'mobile_number' => $request->mobile_number,
-            'email' => $request->email,
-            'birthday' => $request->birthday,
-            'address' => $request->address,
-            'city' => $request->city,
-            'pincode' => $request->pincode,
-        ]
+
+    // Create or Update Profile
+    $profile = Profile::updateOrCreate(
+        ['user_id' => $user->id],
+        $validated
     );
-        return redirect()->back()->with('success', 'Profile added successfully!');
-       
+
+    // If request came from API (mobile app)
+    if ($request->is('*api/')||$request->wantsJson()) {
+        return response()->json([
+            'status'  => true,
+            'message' => 'Profile saved successfully!',
+            'data'    => $profile
+        ], 200);
     }
+
+    // If Web (Blade) request
+    return redirect()->back()->with('success', 'Profile added successfully!');
+}
+
 
     /**
      * Display the specified resource.
