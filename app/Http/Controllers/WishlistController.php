@@ -11,8 +11,14 @@ use Illuminate\Http\Request;
 class WishlistController extends Controller
 {
 
-    public function index() {
+    public function index(Request $request) {
     $wishlists = Wishlist::with('product')->where('user_id', auth()->id())->get();
+    if($request->is('api/*') || $request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'data' => $wishlists
+        ]);
+    }
     return view('page.wishlist', compact('wishlists'));
 }
 public function addToWishlist(Request $request)

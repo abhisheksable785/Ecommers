@@ -2,206 +2,422 @@
 @section('title', 'Home')
 @section('content')
 
-    <!-- Hero Section Begin -->
-    <section class="hero">
+<style>
+    :root {
+        --primary-color: #1a1a1a;
+        --accent-color: #3b82f6;
+        --text-color: #4a5568;
+        --bg-light: #f8f9fa;
+        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        font-family: 'Nunito Sans', sans-serif;
+        color: var(--text-color);
+    }
+
+    /* Hero Section */
+    .hero-modern {
+        position: relative;
+        height: 85vh;
+        min-height: 600px;
+        overflow: hidden;
+    }
+
+    .hero-modern .hero__slider .hero__items {
+        height: 85vh;
+        min-height: 600px;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .hero-modern .hero__items::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 40%, rgba(255,255,255,0) 100%);
+        z-index: 1;
+    }
+
+    .hero-modern .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-modern h6 {
+        color: var(--accent-color);
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        opacity: 0;
+        animation: fadeInUp 0.8s forwards 0.3s;
+    }
+
+    .hero-modern h2 {
+        font-size: 4.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeInUp 0.8s forwards 0.5s;
+    }
+
+    .hero-modern p {
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin-bottom: 2.5rem;
+        opacity: 0;
+        animation: fadeInUp 0.8s forwards 0.7s;
+    }
+
+    .btn-modern {
+        display: inline-flex;
+        align-items: center;
+        padding: 1rem 2.5rem;
+        background: var(--primary-color);
+        color: #fff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 50px;
+        transition: var(--transition);
+        opacity: 0;
+        animation: fadeInUp 0.8s forwards 0.9s;
+    }
+
+    .btn-modern:hover {
+        background: var(--accent-color);
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Categories Section */
+    .section-title {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title span {
+        color: var(--accent-color);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+    }
+
+    .category-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: var(--transition);
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .category-card .img-wrapper {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .category-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .category-card:hover img {
+        transform: scale(1.1);
+    }
+
+    .category-card .content {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .category-card h5 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .category-card .discount {
+        color: var(--accent-color);
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    /* Product Section */
+    .product-card-modern {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: var(--transition);
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .product-card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .product-card-modern .img-box {
+        position: relative;
+        height: 320px;
+        overflow: hidden;
+        background: #f1f1f1;
+    }
+
+    .product-card-modern .img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .product-card-modern:hover .img-box img {
+        transform: scale(1.05);
+    }
+
+    .product-actions {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: var(--transition);
+    }
+
+    .product-card-modern:hover .product-actions {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-btn:hover {
+        background: var(--accent-color);
+        color: #fff;
+    }
+
+    .product-info {
+        padding: 1.5rem;
+    }
+
+    .product-category {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        display: block;
+        text-decoration: none;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--accent-color);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Filter Controls */
+    .filter__controls {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .filter__controls li {
+        display: inline-block;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #b7b7b7;
+        margin: 0 15px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .filter__controls li.active,
+    .filter__controls li:hover {
+        color: var(--primary-color);
+    }
+</style>
+
+<!-- Hero Section Begin -->
+<section class="hero-modern">
+    <div class="hero__slider owl-carousel">
+        <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Summer Collection 2025</h6>
+                            <h2>Elevate Your Style</h2>
+                            <p>Discover our curated collection of luxury essentials. Ethically crafted with an unwavering commitment to exceptional quality and timeless design.</p>
+                            <a href="{{ route('shop') }}" class="btn-modern">Shop Collection <i class="fa fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__items set-bg" data-setbg="img/hero/hero-2.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>New Arrivals</h6>
+                            <h2>Fall - Winter 2025</h2>
+                            <p>Experience the perfect blend of comfort and sophistication. Our new season pieces are designed to make a statement.</p>
+                            <a href="{{ route('shop') }}" class="btn-modern">Explore Now <i class="fa fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+
+<!-- Categories Section Begin -->
+<section class="py-5" style="background: var(--bg-light);">
+    <div class="container py-5">
+        <div class="section-title">
+            <span>Collections</span>
+            <h2>Shop by Category</h2>
+        </div>
         <div class="row">
-            <div class="col-8">
-                @if (session('success'))
-                    <div class="alert alert-success" id="successAlert">
-                        {{ session('success') }}
-                    </div>
-
-                    <script>
-                        // Hide success message after 3 seconds
-                        setTimeout(function() {
-                            var alertBox = document.getElementById('successAlert');
-                            if (alertBox) {
-                                alertBox.style.display = 'none';
-                            }
-                        }, 3000); // 3000ms = 3 seconds
-                    </script>
-                @endif
-
-            </div>
-        </div>
-        <div class="hero__slider owl-carousel">
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-7 col-md-8">
-                            <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2025</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                    commitment to exceptional quality.</p>
-                                <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                                <div class="hero__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
-                                </div>
-                            </div>
+            @foreach ($categories as $category)
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="category-card" onclick="window.location.href='{{ route('category.products', $category->id) }}'">
+                        <div class="img-wrapper">
+                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}">
+                        </div>
+                        <div class="content">
+                            <h5>{{ $category->name }}</h5>
+                            <span class="discount">{{ $category->discount ?? 'New Arrival' }}</span>
                         </div>
                     </div>
                 </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="section-title">
+            <span>Trending</span>
+            <h2>Featured Products</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
+                    <li class="active" data-filter="*">All Products</li>
+                    <li data-filter=".new-arrivals">New Arrivals</li>
+                    <li data-filter=".hot-sales">Best Sellers</li>
+                </ul>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-2.jpg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-5 col-lg-7 col-md-8">
-                            <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2025</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                    commitment to exceptional quality.</p>
-                                <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                                <div class="hero__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
-                                </div>
+        </div>
+        <div class="row product__filter">
+            @foreach ($products as $product)
+                <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+                    <div class="product-card-modern">
+                        <div class="img-box" onclick="window.location.href='{{ route('product.details', $product->id) }}'" style="cursor: pointer;">
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                            <div class="product-actions">
+                                <form action="{{ route('wishlist.add', $product->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="action-btn" title="Add to Wishlist">
+                                        <i class="fa fa-heart-o"></i>
+                                    </button>
+                                </form>
+                                <a href="#" class="action-btn" title="Compare">
+                                    <i class="fa fa-exchange"></i>
+                                </a>
                             </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Clothing</div>
+                            <a href="{{ route('product.details', $product->id) }}" class="product-title">{{ $product->name }}</a>
+                            <div class="product-price">₹{{ number_format($product->price) }}</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-    </section>
-    <!-- Hero Section End -->
+    </div>
+</section>
+<!-- Product Section End -->
 
-    <!-- Banner Section Begin -->
-    <section class="category-grid py-5" style="background-color: #dcdad3">
-        <div class="container">
-            <div class="row">
-
-                @foreach ($categories as $category)
-                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4" class="card-product"
-                        style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-                        <div class="card text-center border-0 shadow-sm">
-                            <div class="card-body p-2 d-flex flex-column align-items-center"
-                                style=" cursor: pointer;background-color: rgb(255, 255, 255); border-radius: 12px;transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 3px 5px 6px #000;">
-                                {{-- Category Image --}}
-                                <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"
-                                    class="img-fluid mb-2 rounded"
-                                    onclick="window.location.href='{{ route('category.products', $category->id) }}'"
-                                    style="height: 160px; object-fit: contain; width: 200px; border-radius: 10px;">
-
-                                {{-- Category Name --}}
-                                <h6 class="fw-semibold text-dark mb-1">{{ $category->name }}</h6>
-
-                                {{-- Discount (example random here) --}}
-                                <b class="text-success fw-bold mb-1" style="font-size: 14px;">
-                                    {{ $category->discount ?? 'UP TO 70% OFF' }}
-                                </b>
-
-                                {{-- Shop Now --}}
-                                <h2 href="" class="text-primary fw-medium"
-                                    style="font-size: 13px; font-weight: 700 ">
-                                    SHOP NOW
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
+@if (session('success'))
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;" class="animate__animated animate__fadeInUp">
+        <div class="alert alert-success shadow-lg border-0 rounded-lg">
+            <i class="fa fa-check-circle mr-2"></i> {{ session('success') }}
         </div>
-    </section>
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 3000);
+    </script>
+@endif
 
-    <!-- Banner Section End -->
-    <section class="product spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="filter__controls">
-                        <li class="active" data-filter="*">Best Sellers</li>
-                        <li data-filter=".new-arrivals">New Arrivals</li>
-                        <li data-filter=".hot-sales">Hot Sales</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row product__filter">
-                @foreach ($products as $product)
-                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                        <div class="product__item"
-                            style="border-radius: 15px; overflow: hidden; background-color: #fff; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); position: relative;">
-                            <div class="product__item__pic set-bg" data-setbg="{{ asset('storage/' . $product->image) }}"
-                                style="cursor: pointer; height: 300px; width: 100%; background-size: cover; background-position: center; position: relative; transition: transform 0.3s ease;"
-                                onclick="window.location.href='{{ route('product.details', $product->id) }}'">
-
-                                <div class="product__actions"
-                                    style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 12px;">
-                                    <form action="{{ route('wishlist.add', $product->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        <button type="submit"
-                                            style="border: none; background: rgba(255,255,255,0.95); 
-                                           border-radius: 50%; width: 40px; height: 40px; 
-                                           display: flex; align-items: center; justify-content: center;
-                                           box-shadow: 0 3px 8px rgba(0,0,0,0.15); transition: all 0.2s ease;
-                                           transform: translateY(0);">
-                                            <img src="{{ asset('img/icon/heart.png') }}" alt="wishlist"
-                                                style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-                                        </button>
-                                    </form>
-                                    <a href="simileir"
-                                        style="background: rgba(255,255,255,0.95); border-radius: 50%; 
-                                  width: 40px; height: 40px; display: flex; align-items: center; 
-                                  justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-                                  transition: all 0.2s ease; transform: translateY(0);">
-                                        <img src="{{ asset('img/icon/compare.png') }}" alt="compare"
-                                            style="width: 20px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));">
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="product__item__text" style="padding: 20px; position: relative;">
-                                <div style="margin-bottom: 12px;">
-                                    <h6 style="margin: 0; font-weight: 600; font-size: 1.05rem;">
-                                        <a href="{{ route('product.details', $product->id) }}"
-                                            style="color: #2d3748; text-decoration: none; transition: color 0.2s ease;">
-                                            {{ $product->name }}
-                                        </a>
-                                    </h6>
-                                </div>
-                                <h5 style="color: #3b82f6; font-weight: 700; margin: 0; font-size: 1.25rem;">
-                                    ₹{{ number_format($product->price) }}
-                                </h5>
-
-                            </div>
-
-                            <!-- Hover Effects -->
-                            <style>
-                                .product__item:hover {
-                                    transform: translateY(-5px);
-                                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-                                }
-
-                                .product__item:hover .product__item__pic {
-                                    transform: scale(1.03);
-                                }
-
-                                button:hover,
-                                .product__actions a:hover {
-                                    transform: translateY(-2px);
-                                    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
-                                }
-
-                                .product__item__text a:hover {
-                                    color: #3b82f6;
-                                }
-                            </style>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Categories Section Begin -->
-
-    <!-- Categories Section End -->
 @endsection
