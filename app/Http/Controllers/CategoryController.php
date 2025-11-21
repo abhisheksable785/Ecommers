@@ -48,25 +48,27 @@ class CategoryController extends Controller
         return view('admin.category.add-cat');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|unique:tbl_category|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'description' => 'nullable|string',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|unique:tbl_category|max:255',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'description' => 'nullable|string',
+    ]);
 
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('uploads/category'), $imageName);
+    $imageName = time() . '.' . $request->image->extension();
 
-        tbl_category::create([
-            'name' => $request->name,
-            'image' => 'uploads/category/' . $imageName,
-            'description' => $request->description,
-        ]);
+    $request->image->move(public_path('storage/categories'), $imageName);
 
-        return redirect()->route('category.index')->with('success', 'Category added successfully!');
-    }
+    tbl_category::create([
+        'name' => $request->name,
+        'image' => 'storage/categories/' . $imageName,
+        'description' => $request->description,
+    ]);
+
+    return redirect()->route('category.index')->with('success', 'Category added successfully!');
+}
+
 
     public function edit($id)
     {
@@ -76,34 +78,33 @@ class CategoryController extends Controller
 
     // FIXED: Update method with proper image handling
     public function update(Request $request, $id)
-    {
-        $category = tbl_category::findOrFail($id);
-        
-        $request->validate([
-            'name' => 'required|string|max:255|unique:tbl_category,name,' . $id,
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
-        ]);
+{
+    $category = tbl_category::findOrFail($id);
 
-        // Update Image if new one is uploaded
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if (file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
-            }
-            
-            // Upload new image
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/category'), $imageName);
-            $category->image = 'uploads/category/' . $imageName;
+    $request->validate([
+        'name' => 'required|string|max:255|unique:tbl_category,name,' . $id,
+        'description' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+    ]);
+
+    if ($request->hasFile('image')) {
+
+        if (file_exists(public_path($category->image))) {
+            unlink(public_path($category->image));
         }
 
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('storage/categories'), $imageName);
 
-        return redirect()->route('category.index')->with('success', 'Category updated successfully!');
+        $category->image = 'storage/categories/' . $imageName;
     }
+
+    $category->name = $request->name;
+    $category->description = $request->description;
+    $category->save();
+
+    return redirect()->route('category.index')->with('success', 'Category updated successfully!');
+}
 
     public function destroy($id)
     {

@@ -163,7 +163,7 @@ Route::delete('/contact/{id}', 'destroy')->name('contact.destroy');
 
 
 // In routes/web.php
-Route::prefix('category')->group(function () {
+Route::prefix('/admin/category')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
     Route::view('/category/add',  'admin.category.add-cat')->name('category.create');
@@ -190,13 +190,8 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/catproducts/{id}', 'categoryProducts')->name('category.products');
     Route::get('/product/{id}',  'product_details')->name('product.details');
     Route::get('/search', 'search')->name('product.search');
-
     // Route::get('/',[ProductController::class, 'home'])->name('products.home');
 });
-
-
-///// login & sign Up
-
 
 Route::controller(WishlistController::class)->group(function(){
     Route::get('/wishlist', 'index')->name('wishlist.index');
@@ -211,15 +206,10 @@ Route::get('/reset-pass',function(){
 Route::middleware(['auth'])->group(function () {
     
 });
-
-
 Route::get('/users', [AuthController::class, 'index'])->name('users.index');
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
-
 Route::get('/bill', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
-
-
 Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply.coupon');
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
@@ -227,8 +217,6 @@ Route::post('/coupons/store', [CouponController::class, 'store'])->name('coupons
 Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
 Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
 Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-
-
 
 // routes/web.php
 Route::controller(BagController::class)->group(function () {
@@ -241,14 +229,11 @@ Route::controller(BagController::class)->group(function () {
 
 Route::get('/my-profile', [profileController::class, 'index'])->name('profile.index');
 Route::resource('profile', profileController::class)->only(['index', 'store', 'update']);
-
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{id}', [OrderController::class, 'view'])->name('orders.view');
 Route::get('/orders/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
 Route::post('orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
-
 Route::get('/user-order', [OrderController::class, 'order'])->name('user.orders');
-
 Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoice.store');
 Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 
