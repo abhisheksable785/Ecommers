@@ -62,7 +62,5 @@ Route::middleware('auth:sanctum')->group(function () {
     route::get('/profile/info', [ProfileController::class, 'index']);
 
     Route::get('/user/wishlist', [WishlistController::class, 'index']);
-
-
-
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggleWishlist']);
 });

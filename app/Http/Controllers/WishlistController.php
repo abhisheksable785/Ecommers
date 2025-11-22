@@ -7,6 +7,7 @@ use App\Models\AddToBag;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
@@ -82,6 +83,56 @@ public function moveToCart(Request $request)
         ->with('success', 'Moved to cart successfully!')
         ->with('added_product_id', $product->id); // Pass the product ID for further use
 }
+
+public function toggleWishlist(Request $request)
+    {
+        // 1. Authentication Check (Mandatory for API)
+        if (!Auth::check()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthenticated. Please log in to manage your wishlist.'
+            ], 401);
+        }
+
+        // 2. Validate the incoming product ID
+        $request->validate([
+            'product_id' => 'required|integer|exists:tbl_product,id',
+        ]);
+
+        $userId = Auth::id();
+        $productId = $request->product_id;
+
+        // 3. Check for existing item
+        $wishlistItem = Wishlist::where('user_id', $userId)
+                                ->where('product_id', $productId)
+                                ->first();
+
+        if ($wishlistItem) {
+            // Item EXISTS -> REMOVE it
+            $wishlistItem->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'action' => 'removed',
+                'message' => 'Product successfully removed from wishlist.',
+                'is_wishlisted' => false,
+            ]);
+
+        } else {
+            // Item DOES NOT EXIST -> ADD it
+            Wishlist::create([
+                'user_id' => $userId,
+                'product_id' => $productId,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'action' => 'added',
+                'message' => 'Product successfully added to wishlist.',
+                'is_wishlisted' => true,
+            ]);
+        }
+    }
 
 
 
