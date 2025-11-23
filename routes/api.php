@@ -56,4 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggleWishlist']);
+
+    Route::get('/user/oder-list',[OrderController::class,'userOderApi']);
 });

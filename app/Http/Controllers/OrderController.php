@@ -26,6 +26,19 @@ public function index()
         'totalFailed'
     ));
 }
+public function userOderApi(Request $request){
+    $user = auth()->user();
+    $orders = Order::with(['user', 'items'])->where('user_id', $user->id)->latest()->paginate(15);
+    return response()->json([
+        'status' => true,
+        'message' => 'Retrieve all Orders',
+        'data' => ['orders' => $orders]
+    ]);
+
+
+    
+   
+}
 // public function view($id)
 // {
 //     $order = Order::with(['user', 'items', 'profile'])->findOrFail($id);
