@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\WishlistController;
@@ -57,5 +58,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggleWishlist']);
 
-    Route::get('/user/oder-list',[OrderController::class,'userOderApi']);
+    Route::get('/user/order-list',[OrderController::class,'userOderApi']);
+
 });

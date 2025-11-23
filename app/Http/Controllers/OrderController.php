@@ -26,9 +26,9 @@ public function index()
         'totalFailed'
     ));
 }
-public function userOderApi(Request $request){
+public function userOderApi(){
     $user = auth()->user();
-    $orders = Order::with(['user', 'items'])->where('user_id', $user->id)->latest()->paginate(15);
+    $orders = Order::with(['user', 'items'])->where('user_id', $user->id)->get();
     return response()->json([
         'status' => true,
         'message' => 'Retrieve all Orders',
