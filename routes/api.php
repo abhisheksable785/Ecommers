@@ -43,8 +43,8 @@ Route::get('/product-list', [ProductController::class, 'apiIndex']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::post('/add-to-bag', [AddToCardController::class, 'addToBag']);
     Route::get('/bag', [AddToCardController::class, 'getBag']);
+    Route::post('/add-to-bag', [AddToCardController::class, 'addToBag']);
     Route::put('/bag/{id}/quantity', [AddToCardController::class, 'updateQuantity']);
     Route::delete('/bag/remove/{id}', [AddToCardController::class, 'removeFromBag']);
     Route::delete('/bag/clear', [AddToCardController::class, 'clearBag']);
@@ -57,7 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggleWishlist']);
-
-    Route::get('/user/order-list',[OrderController::class,'userOderApi']);
+    Route::get('/user/order-list', [OrderController::class, 'userOderApi']);
 
 });
