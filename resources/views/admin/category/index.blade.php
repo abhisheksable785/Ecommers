@@ -191,7 +191,7 @@
                     $('#edit_image_preview').attr('src', '');
 
                     $.ajax({
-                        url: "{{ url('category/view') }}/" + id,
+                        url: "{{ url('admin/category/view') }}/" + id,
                         type: "GET",
                         dataType: "json",
                         success: function(response) {
@@ -210,7 +210,7 @@
                             $('#edit_image_preview').attr('src', imagePath);
 
                             // Set form action using named route
-                            $('#editCategoryForm').attr('action', "{{ url('category/update') }}/" +
+                            $('#editCategoryForm').attr('action', "{{ url('admin/category/update') }}/" +
                                 response.id);
 
                             // Show offcanvas
@@ -233,7 +233,7 @@
                     $('#delete_category_name').text(name);
 
                     // Set form action
-                    $('#deleteCategoryForm').attr('action', "{{ url('category/destroy') }}/" + id);
+                    $('#deleteCategoryForm').attr('action', "{{ url('admin/category/destroy') }}/" + id);
 
                     // Show modal
                     let modal = new bootstrap.Modal('#deleteModal');

@@ -88,6 +88,10 @@
                                                 @endif
                                             </h6>
                                             <small class="text-muted">SKU: {{ optional($item->product)->sku ?? 'N/A' }}</small>
+                                            @if($item->size)
+                                                <br>
+                                                <small class="text-muted">Size: {{ $item->size }}</small>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
