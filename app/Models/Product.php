@@ -20,6 +20,7 @@ class Product extends Model
     ];
     protected $casts = [
     'pics' => 'array',
+    'sizes' => 'array',
 ];
 
     public function category()

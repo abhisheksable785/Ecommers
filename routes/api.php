@@ -37,6 +37,7 @@ Route::post('/slider/store', [SliderController::class, 'store']);
 Route::get('/slider/list', [SliderController::class, 'index']);
 
 Route::get('/category-list', [CategoryController::class, 'index']);
+Route::get('/category-product-list/{id}', [ProductController::class, 'getProductsByCategory']);
 Route::get('/product-list', [ProductController::class, 'apiIndex']);
 
 // Route::get('/profile-list', [profileController::class, 'apiIndex']);
