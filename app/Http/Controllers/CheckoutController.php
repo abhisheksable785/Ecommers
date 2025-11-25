@@ -85,6 +85,7 @@ class CheckoutController extends Controller
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
                     'price_at_purchase' => $item->price_at_purchase,
+                    'size' => $item->size,
                 ]);
             }
 
@@ -163,6 +164,7 @@ class CheckoutController extends Controller
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
                     'price_at_purchase' => $item->price_at_purchase,
+                    'size' => $item->size,
                 ]);
             }
 
@@ -228,6 +230,7 @@ class CheckoutController extends Controller
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
                 'price_at_purchase' => $item['price_at_purchase'],
+                'size' => $item['size'],
             ]);
         }
 

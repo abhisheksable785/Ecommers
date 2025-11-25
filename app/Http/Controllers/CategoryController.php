@@ -55,7 +55,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:tbl_category|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
             'description' => 'nullable|string',
         ]);
 
