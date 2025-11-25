@@ -30,7 +30,7 @@ public function index(Request $request)
     $categories = tbl_category::all();
     
     // Base query with category join
-    $query = Product::join("tbl_category", "tbl_product.category", "=", "tbl_category.id")
+    $query = Product::leftJoin("tbl_category", "tbl_product.category", "=", "tbl_category.id")
         ->select("tbl_category.name as category_name", "tbl_product.*");
     
     // Apply filters
@@ -83,16 +83,30 @@ public function index(Request $request)
     ));
 }
 
-public function apiIndex()
-{
-    $products = Product::all();
+    public function apiIndex()
+    {
+        $products = Product::inRandomOrder()->get();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Retrieve all Products',
-        'data' => ['products' => $products]
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Retrieve all Products',
+            'data' => ['products' => $products]
+        ]);
+    }
+
+    public function getProductsByCategory($id)
+    {
+        $products = Product::where('category', $id)
+            ->where('status', 'published')
+            ->where('in_stock', true)
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Retrieve products by category',
+            'data' => ['products' => $products]
+        ]);
+    }
 
     // Show single product (admin)
    public function show($id , Request $request)
@@ -180,6 +194,8 @@ public function apiIndex()
             'is_new' => 'nullable|boolean',
             'status' => 'nullable|in:published,draft,inactive',
             'tags' => 'nullable|string',
+            'sizes' => 'nullable|array',
+            'sizes.*' => 'string',
         ]);
 
         // Handle main image
@@ -254,6 +270,7 @@ public function apiIndex()
         // Organization
         $product->status = $status;
         $product->tags = $request->tags;
+        $product->sizes = $request->sizes;
         
         $product->save();
 
@@ -283,7 +300,10 @@ public function apiIndex()
             'discount_price' => 'nullable|numeric|min:0|lt:price',
             'gender' => 'required|in:Men,Women,Unisex,Kids',
             'category_name' => 'required|exists:tbl_category,id',
+
             'stock_quantity' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => 'string',
         ]);
 
         $product = Product::findOrFail($id);
@@ -379,6 +399,7 @@ public function apiIndex()
         // Organization
         $product->status = $request->status ?? 'published';
         $product->tags = $request->tags;
+        $product->sizes = $request->sizes;
         
         $product->save();
 
