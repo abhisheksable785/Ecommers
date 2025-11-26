@@ -160,6 +160,42 @@
                     </div>
                     <!-- /Variants -->
 
+                   <!-- Size Chart -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Size Chart</h5>
+        <button type="button" class="btn btn-sm btn-outline-primary waves-effect waves-light" id="selectAllSizes">
+            <i class="ti ti-checks me-1"></i> Select All
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label mb-3">Select Available Sizes</label>
+            <div class="demo-inline-spacing">
+                @php
+                    $productSizes = $product->sizes ?? [];
+                @endphp
+                @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'] as $size)
+                <div class="form-check form-check-inline form-check-primary custom-option custom-option-basic">
+                    <label class="form-check-label custom-option-content" for="size-{{ $size }}">
+                        <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" 
+                               value="{{ $size }}" id="size-{{ $size }}"
+                               {{ in_array($size, old('sizes', $productSizes)) ? 'checked' : '' }}>
+                        <span class="custom-option-body">
+                            <span class="custom-option-title fw-bold fs-5">{{ $size }}</span>
+                        </span>
+                    </label>
+                </div>
+                @endforeach
+            </div>
+            @error('sizes')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
+<!-- /Size Chart -->
+
                     <!-- Inventory -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -459,6 +495,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('At least one variant option is required');
             }
         }
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAllBtn = document.getElementById('selectAllSizes');
+    const sizeCheckboxes = document.querySelectorAll('.size-checkbox');
+    
+    selectAllBtn.addEventListener('click', function() {
+        const allChecked = Array.from(sizeCheckboxes).every(checkbox => checkbox.checked);
+        
+        sizeCheckboxes.forEach(checkbox => {
+            checkbox.checked = !allChecked;
+        });
+        
+        // Update button text
+        if (allChecked) {
+            selectAllBtn.innerHTML = '<i class="fas fa-check-double me-1"></i> Select All';
+        } else {
+            selectAllBtn.innerHTML = '<i class="fas fa-times me-1"></i> Deselect All';
+        }
+    });
+    
+    // Update button text on individual checkbox change
+    sizeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = Array.from(sizeCheckboxes).every(cb => cb.checked);
+            if (allChecked) {
+                selectAllBtn.innerHTML = '<i class="fas fa-times me-1"></i> Deselect All';
+            } else {
+                selectAllBtn.innerHTML = '<i class="fas fa-check-double me-1"></i> Select All';
+            }
+        });
     });
 });
 </script>
