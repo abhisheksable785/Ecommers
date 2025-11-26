@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AddToCardController;
+use App\Http\Controllers\Api\LegalController as ApiLegalController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\profileController;
@@ -43,6 +45,9 @@ Route::get('/product-list', [ProductController::class, 'apiIndex']);
 // Route::get('/profile-list', [profileController::class, 'apiIndex']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/legal/accept', [ApiLegalController::class, 'acceptTerms']);
+    Route::post('/legal/check', [ApiLegalController::class, 'checkTerms']);
+
 
     Route::get('/bag', [AddToCardController::class, 'getBag']);
     Route::post('/add-to-bag', [AddToCardController::class, 'addToBag']);
@@ -58,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/wishlist', [WishlistController::class, 'index']);
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggleWishlist']);
+
     Route::get('/user/order-list', [OrderController::class, 'userOderApi']);
+    Route::get('/user/order-details/{id}', [OrderController::class, 'orderDetailsApi']);
 
 });

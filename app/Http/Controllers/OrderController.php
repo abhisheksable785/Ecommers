@@ -48,13 +48,8 @@ public function userOderApi(){
 // }
 public function view($id)
 {
-    // Eager load the user (customer), their profile, and the order items with product details
-    // Assuming relationships: Order belongsTo User, User hasOne Profile, Order hasMany OrderItem, OrderItem belongsTo Product
     $order = Order::with(['user', 'items.product'])->findOrFail($id);
-
-    // Try to find the profile associated with the order's user
     $userProfile = \App\Models\Profile::where('user_id', $order->user_id)->first();
-
     return view('admin.orders.view', compact('order', 'userProfile'));
 }
 public function order(){

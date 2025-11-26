@@ -57,6 +57,19 @@ Route::get("/users", function () {
 });
 
 
+Route::get('/privacy-policy', function () {
+    return view('legal.privacy');
+});
+
+Route::get('/terms-and-conditions', function () {
+    return view('legal.term');
+});
+
+Route::get('/disclaimer', function () {
+    return view('legal.disclaimer');
+});
+
+
 
 
 
