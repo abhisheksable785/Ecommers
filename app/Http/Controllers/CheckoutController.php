@@ -74,7 +74,7 @@ class CheckoutController extends Controller
                 'payment_method' => 'cash_on_delivery',
 
                 // ⭐ REQUIRED FIELDS ADDED
-                'payment_status' => 'pending',
+                'payment_status' => 'success',
                 'status' => 'pending',
                 'order_date' => now(),
             ]);
@@ -98,13 +98,30 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // ⭐ ONLINE PAYMENT (Later Razorpay integration)
         if ($request->payment_method === 'online') {
-            return response()->json([
-                'success' => true,
-                'message' => 'Online payment not yet implemented',
-            ]);
-        }
+
+         $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+
+    // Create Razorpay order
+    $razorpayOrder = $api->order->create([
+        'receipt' => 'ORDER_'.uniqid(),
+        'amount' => $total * 100,  // paise
+        'currency' => 'INR',
+        'payment_capture' => 1   // auto capture
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Razorpay order created',
+        'razorpay_order_id' => $razorpayOrder['id'],
+        'key' => env('RAZORPAY_KEY'),
+        'amount' => $total * 100,
+        'name' => $request->full_name,
+        'email' => $request->email,
+        'mobile' => $request->mobile_number,
+    ]);
+}
+
     }
 
     public function checkout()
