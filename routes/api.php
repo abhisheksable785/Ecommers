@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AddToCardController;
 use App\Http\Controllers\Api\LegalController as ApiLegalController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\AuthController;
@@ -66,5 +67,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/order-list', [OrderController::class, 'userOderApi']);
     Route::get('/user/order-details/{id}', [OrderController::class, 'orderDetailsApi']);
+
+
+
+
+    Route::post("checkout/place-order", [CheckoutController::class, "placeOrderApi"]);
+    Route::post("checkout/verify-payment", [PaymentController::class, "paymentVerify"]);
 
 });
