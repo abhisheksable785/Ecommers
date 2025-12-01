@@ -78,10 +78,10 @@ public function razorpaySuccess(Request $request)
         // Example: Order::create([...]);
 
         Session::forget('order_details');
-        return redirect()->route('home')->with('success', 'Payment successful! Order placed.');
+        return redirect()->back()->with('success', 'Payment successful! Order placed.');
     }
 
-    return redirect()->route('home')->with('error', 'Something went wrong.');
+    return redirect()->back()->with('error', 'Something went wrong.');
 }
 
 }
