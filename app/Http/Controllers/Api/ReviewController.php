@@ -131,7 +131,7 @@ class ReviewController extends Controller
                 $q->where('payment_status','success')->orWhere('status','completed')->orWhere('payment_status','captured');
             })
             ->pluck('id');
-
+            
         if ($orders->isEmpty()) return false;
 
         $count =OrderItems::whereIn('order_id', $orders)->where('product_id', $productId)->count();

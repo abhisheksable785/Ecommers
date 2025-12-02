@@ -31,10 +31,15 @@ public function wishedByUsers()
 {
     return $this->belongsToMany(User::class, 'wishlists')->withTimestamps();
 }
-public function inBags()
-{
-    return $this->hasMany(AddToBag::class);
-}
+    public function inBags()
+    {
+        return $this->hasMany(AddToBag::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id');
+    }
 
 // AddToBag.php
 public function user()
