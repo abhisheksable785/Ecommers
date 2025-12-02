@@ -107,10 +107,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/products/{id}/edit', [ProductController::class ,'edit'])->name('products.edit');
             Route::put('/products/{id}', [ProductController::class ,'update'])->name('products.update');
             Route::get('/products/{id}',[ProductController::class ,'show'])->name('products.show');
+
+            // Reviews
+            Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
+            Route::post('/reviews/{id}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+            Route::delete('/reviews/{id}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
         
     });
 
 });
+
+Route::post('/reviews/store', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 // Route::controller(Controller::class)->group(function(){
 //     Route::get('/shop/{id}', 'shop')->name('shop.cat');
 //     Route::post('/contact_list', 'contact');

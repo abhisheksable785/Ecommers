@@ -1,14 +1,16 @@
 <?php
 
 use App\Http\Controllers\Api\AddToCardController;
+use App\Http\Controllers\Api\CheckoutController as ApiCheckoutController;
 use App\Http\Controllers\Api\LegalController as ApiLegalController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\LegalController;
+use App\Http\Controllers\Api\CheckoutController;
+
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\profileController;
@@ -58,7 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart-count', [AddToCardController::class, 'getCartCount']);
 
     Route::get('/produt-details/{id}', [ProductController::class, 'show']);
-    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrderApi']);
+    // Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrderApi']);
     Route::post('/profile/store', [ProfileController::class, 'store']);
     route::get('/profile/info', [ProfileController::class, 'index']);
 
@@ -72,6 +74,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post("checkout/place-order", [CheckoutController::class, "placeOrderApi"]);
-    Route::post("checkout/verify-payment", [PaymentController::class, "paymentVerify"]);
+    Route::post("checkout/verify-payment", [CheckoutController::class, "verifyPayment"]);
 
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('product/{productId}/reviews', [ReviewController::class, 'index']); // public can be without auth if you want
+    Route::get('product/{productId}/can-review', [ReviewController::class, 'canReview']);
+    Route::post('product/{productId}/review', [ReviewController::class, 'store']);
+    Route::delete('product/{productId}/review', [ReviewController::class, 'destroy']);
 });
