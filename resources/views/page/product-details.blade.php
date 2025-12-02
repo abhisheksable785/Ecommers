@@ -406,6 +406,147 @@
     </div>
 </div>
 
+    <!-- Reviews Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4">Customer Reviews</h3>
+                
+                <!-- Review Stats -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 text-center border-end">
+                                <h1 class="display-4 fw-bold text-primary">{{ number_format($product->reviews()->where('is_approved', true)->avg('rating') ?? 0, 1) }}</h1>
+                                <div class="mb-2">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fa fa-star{{ $i <= round($product->reviews()->where('is_approved', true)->avg('rating')) ? ' text-warning' : ' text-muted' }}"></i>
+                                    @endfor
+                                </div>
+                                <p class="text-muted">{{ $product->reviews()->where('is_approved', true)->count() }} Reviews</p>
+                            </div>
+                            <div class="col-md-8">
+                                <!-- Add progress bars for ratings here if needed -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Write Review Form -->
+                @auth
+                    @php
+                        $canReview = false;
+                        // Check if user has purchased the product
+                        // This logic should ideally be in the controller and passed to view, but for now:
+                        $userId = auth()->id();
+                        $orders = \App\Models\Order::where('user_id', $userId)
+                            ->where(function($q){
+                                $q->where('payment_status','paid')
+                                  ->orWhere('status','completed')
+                                  ->orWhere('payment_status','captured');
+                            })->pluck('id');
+                        
+                        if($orders->isNotEmpty()){
+                            $canReview = \App\Models\OrderItems::whereIn('order_id', $orders)->where('product_id', $product->id)->exists();
+                        }
+                        
+                        $alreadyReviewed = \App\Models\Review::where('user_id', $userId)->where('product_id', $product->id)->exists();
+                    @endphp
+
+                    @if($canReview && !$alreadyReviewed)
+                        <div class="card mb-4 border-0 shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Write a Review</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Rating</label>
+                                        <div class="rating-input">
+                                            @for($i = 5; $i >= 1; $i--)
+                                                <input type="radio" name="rating" id="star{{ $i }}" value="{{ $i }}" required>
+                                                <label for="star{{ $i }}"><i class="fa fa-star"></i></label>
+                                            @endfor
+                                        </div>
+                                        <style>
+                                            .rating-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px; }
+                                            .rating-input input { display: none; }
+                                            .rating-input label { cursor: pointer; color: #ddd; font-size: 1.5rem; }
+                                            .rating-input input:checked ~ label,
+                                            .rating-input label:hover,
+                                            .rating-input label:hover ~ label { color: #fbbf24; }
+                                        </style>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Your Review</label>
+                                        <textarea name="comment" class="form-control" rows="4" placeholder="What did you like or dislike?"></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Add Photos</label>
+                                        <input type="file" name="images[]" class="form-control" multiple accept="image/*">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                                </form>
+                            </div>
+                        </div>
+                    @elseif($alreadyReviewed)
+                        <div class="alert alert-info">You have already reviewed this product.</div>
+                    @endif
+                @endauth
+
+                <!-- Reviews List -->
+                <div class="reviews-list">
+                    @forelse($product->reviews()->where('is_approved', true)->latest()->get() as $review)
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            {{ substr($review->user->name ?? 'U', 0, 1) }}
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ $review->user->name ?? 'Unknown User' }}</h6>
+                                            <small class="text-muted">Verified Purchase <i class="fa fa-check-circle text-success"></i></small>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fa fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
+                                    @endfor
+                                </div>
+
+                                <p class="mb-2">{{ $review->comment }}</p>
+
+                                @if($review->images->count() > 0)
+                                    <div class="d-flex gap-2 mt-2">
+                                        @foreach($review->images as $image)
+                                            <img src="{{ asset('storage/' . $image->path) }}" alt="Review Image" class="rounded" style="height: 60px; width: 60px; object-fit: cover; cursor: pointer;" onclick="window.open(this.src)">
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-5">
+                            <i class="fa fa-comment-o fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No reviews yet. Be the first to review!</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if (session('success'))
     <div style="position: fixed; bottom: 30px; right: 30px; z-index: 9999;" class="animate__animated animate__fadeInUp">
         <div class="alert alert-success shadow-lg border-0 rounded-lg px-4 py-3">

@@ -157,6 +157,12 @@
                     </li>
                   </ul>
                 </li>
+                <li class="menu-item {{ request()->routeIs('admin.reviews.index') ? 'active' : '' }}">
+                  <a href="{{ route('admin.reviews.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-star"></i>
+                    <div data-i18n="Reviews">Reviews</div>
+                  </a>
+                </li>
                 <li class="menu-item">
                   <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <div data-i18n="Order">Order</div>
