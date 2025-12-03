@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\OneSignalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -99,11 +100,18 @@ class AuthApiController extends Controller
             'password' => 'required|string|min:8',
 
         ]);
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        if ($user->onesignal_player_id) {
+        OneSignalHelper::sendToUser(
+            $user->onesignal_player_id,
+            "Welcome to BMT Fashions 🎉",
+            "Thanks for joining us, {$user->name}!"
+        );
+    }
         return response()->json([
             'status' => true,
             'message' => 'User registered successfully',
