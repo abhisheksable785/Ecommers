@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AddToCardController;
 use App\Http\Controllers\Api\CheckoutController as ApiCheckoutController;
 use App\Http\Controllers\Api\LegalController as ApiLegalController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\profileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +26,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register-api', 'register')->name('register');
 
 });
+
+
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthApiController::class, 'logout']);
 Route::post('/google-login', [AuthApiController::class, 'googleLogin']);
@@ -83,4 +87,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('product/{productId}/can-review', [ReviewController::class, 'canReview']);
     Route::post('product/{productId}/review', [ReviewController::class, 'store']);
     Route::delete('product/{productId}/review', [ReviewController::class, 'destroy']);
+
+
+    Route::post("/save-player-id", [UserController::class, "savePlayerId"]);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/address/add', [AddressController::class, 'store']);
+    Route::get('/address/list', [AddressController::class, 'index']);
+    Route::delete('/address/delete/{id}', [AddressController::class, 'delete']);
+    Route::post('/address/default/{id}', [AddressController::class, 'setDefault']);
 });

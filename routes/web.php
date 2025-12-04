@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\Api\SliderController;
 use Faker\Guesser\Name;
 use App\Http\Controllers\AuthController;
@@ -12,10 +13,12 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\contactController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -112,7 +115,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
             Route::post('/reviews/{id}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
             Route::delete('/reviews/{id}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('reviews.destroy');
-        
+
+
+            Route::get('/all-customers',[CustomerController::class,'index'])->name('customer.all.index');
+            Route::get('customer-details/ ', [CustomerController::class, 'show'])->name('customer.show');
+
+
+            route::get('notification-settings',[SettingController::class,'notification'])->name('notification');
+            Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications');
+            Route::post('/notifications/send', [AdminNotificationController::class, 'send'])->name('notifications.send');
     });
 
 });
