@@ -33,7 +33,7 @@ $(function () {
   // customers datatable
   if (dt_customer_table.length) {
     var dt_customer = dt_customer_table.DataTable({
-      ajax: assetsPath + 'json/ecommerce-customer-all.json', // JSON file to add data
+      // ajax: assetsPath + 'json/ecommerce-customer-all.json', // JSON file to add data
       columns: [
         // columns according to JSON
         { data: '' },
