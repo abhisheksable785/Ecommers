@@ -28,16 +28,12 @@ public function index()
 }
 public function userOderApi(){
     $user = auth()->user();
-    $orders = Order::with(['user', 'items'])->where('user_id', $user->id)->get();
+    $orders = Order::orderBy('id', 'desc')->with(['user', 'items'])->where('user_id', $user->id)->get();
     return response()->json([
         'status' => true,
         'message' => 'Retrieve all Orders',
         'data' => ['orders' => $orders]
     ]);
-
-
-    
-   
 }
 // public function view($id)
 // {
