@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\OneSignalHelper;
+use OneSignal;
 use App\Http\Controllers\Controller;
 use App\Models\AddToBag;
 use App\Models\Order;
@@ -26,6 +28,7 @@ class CheckoutController extends Controller
     public function placeOrderApi(Request $request)
     {
         $userId = auth()->id();
+        $user = auth()->user();
 
         $cartItems = AddToBag::with("product")
             ->where("user_id", $userId)
@@ -91,6 +94,14 @@ class CheckoutController extends Controller
             }
 
             AddToBag::where('user_id', $userId)->delete();
+            
+            if ($user->onesignal_player_id) {
+                \App\Helpers\OneSignalHelper::sendToUser(
+                    $user->onesignal_player_id,
+                    "Order Placed Successfully 🛒",
+                    "Your order {$order->order_number} is confirmed! Total: ₹{$order->total_amount}"
+                );
+            }
 
             return response()->json([
                 'success' => true,
@@ -140,7 +151,6 @@ class CheckoutController extends Controller
         'razorpay_payment_id' => 'required',
         'razorpay_order_id' => 'required',
         'razorpay_signature' => 'required',
-
         // Proper field names matching DB
         'full_name' => 'required',
         'email' => 'required',
@@ -153,6 +163,7 @@ class CheckoutController extends Controller
     ]);
 
     $userId = auth()->id();
+    $user = auth()->user();
     $cartItems = AddToBag::where("user_id", $userId)->get();
 
     if ($cartItems->isEmpty()) {
@@ -202,8 +213,15 @@ class CheckoutController extends Controller
             'size' => $item->size,
         ]);
     }
-
+    
     AddToBag::where('user_id', $userId)->delete();
+    if ($user->onesignal_player_id) {
+                \App\Helpers\OneSignalHelper::sendToUser(
+                    $user->onesignal_player_id,
+                    "Order Placed Successfully 🛒",
+                    "Your order {$order->order_number} is confirmed! Total: ₹{$order->total_amount}"
+                );
+            }
 
     return response()->json([
         'success' => true,
