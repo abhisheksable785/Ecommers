@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -17,63 +18,67 @@ class OneSignalHelper
      * @param string|null $url
      * @param string|null $scheduledAt - YYYY-MM-DD HH:MM format
      */
-    public static function sendToUser($playerIds, $title, $message, $image = null, $url = null, $scheduledAt = null)
-    {
-        $appId  = env('ONESIGNAL_APP_ID');
-        $apiKey = env('ONESIGNAL_API_KEY');
+   public static function sendToUser($userIds, $title, $message, $image = null, $url = null, $scheduledAt = null)
+{
+    $appId  = env('ONESIGNAL_APP_ID');
+    $apiKey = env('ONESIGNAL_API_KEY');
 
-        // Ensure playerIds is always an array
-        $targetPlayerIds = is_array($playerIds) ? $playerIds : [$playerIds];
+    // Normalize input to array
+    $userIds = is_array($userIds) ? $userIds : [$userIds];
 
-        // Filter out null/empty IDs
-        $targetPlayerIds = array_filter($targetPlayerIds);
+    // Fetch users who:
+    // 1) Enabled notifications
+    // 2) Have valid OneSignal player ID
+    $players = User::whereIn('id', $userIds)
+        ->where('notifications', 1)                // 🔥 only users with notifications ON
+        ->whereNotNull('onesignal_player_id')             // 🔥 must have a valid OneSignal ID
+        ->pluck('onesignal_player_id')
+        ->toArray();
 
-        if (!$appId || !$apiKey || empty($targetPlayerIds)) {
-            Log::error("❌ OneSignal Config Missing or No Player IDs provided!");
-            return false;
-        }
-
-        $payload = [
-            "app_id" => $appId,
-            "include_player_ids" => array_values($targetPlayerIds), // Reset array keys
-            "headings" => ["en" => $title],
-            "contents" => ["en" => $message],
-            "priority" => 10,
-        ];
-
-        // ✅ IMAGE SUPPORT
-        if ($image) {
-            $imageUrl = asset('uploads/notifications/' . $image);
-            $payload["big_picture"] = $imageUrl;       // Android
-            $payload["ios_attachments"] = ["id" => $imageUrl]; // iOS
-            $payload["chrome_web_image"] = $imageUrl;  // Web
-        }
-
-        // ✅ CLICK URL
-        if ($url) {
-            $payload["url"] = $url;
-        }
-
-        // ✅ SCHEDULING SUPPORT (send_after)
-        if ($scheduledAt) {
-            // OneSignal expects: "2015-09-24 14:00:00 GMT-0700"
-            // We convert the input time to the required format with timezone
-            $date = Carbon::parse($scheduledAt);
-            $payload["send_after"] = $date->format('Y-m-d H:i:s') . ' GMT' . $date->format('O'); 
-        }
-
-        $response = Http::withHeaders([
-            "Authorization" => "key " . $apiKey,
-            "Content-Type"  => "application/json",
-            "Accept"        => "application/json",
-        ])->post("https://api.onesignal.com/notifications", $payload);
-
-        if ($response->failed()) {
-            Log::error("OneSignal Error: " . $response->body());
-        } else {
-            Log::info("OneSignal Success: " . $response->body());
-        }
-
-        return $response->json();
+    if (empty($players)) {
+        Log::warning("No users eligible for OneSignal push (notifications off or no player ID).");
+        return false;
     }
+
+    $payload = [
+        "app_id" => $appId,
+        "include_player_ids" => $players,
+        "headings" => ["en" => $title],
+        "contents" => ["en" => $message],
+        "priority" => 10,
+    ];
+
+    // Attach image if exists
+    if ($image) {
+        $imageUrl = asset('uploads/notifications/' . $image);
+        $payload["big_picture"] = $imageUrl;
+        $payload["chrome_web_image"] = $imageUrl;
+        $payload["ios_attachments"] = ["id" => $imageUrl];
+    }
+
+    // URL click redirect
+    if ($url) {
+        $payload["url"] = $url;
+    }
+
+    // Scheduling
+    if ($scheduledAt) {
+        $date = Carbon::parse($scheduledAt);
+        $payload["send_after"] = $date->format('Y-m-d H:i:s') . ' GMT' . $date->format('O');
+    }
+
+    $response = Http::withHeaders([
+        "Authorization" => "Basic " . $apiKey,   // OneSignal uses Basic auth
+        "Content-Type"  => "application/json",
+    ])->post("https://api.onesignal.com/api/v1/notifications", $payload);
+
+    if ($response->failed()) {
+        Log::error("❌ OneSignal Error: " . $response->body());
+    } else {
+        Log::info("✔ OneSignal Success: " . $response->body());
+    }
+
+    return $response->json();
+}
+
 }

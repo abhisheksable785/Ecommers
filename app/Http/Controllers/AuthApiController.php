@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\OneSignalHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthApiController extends Controller
@@ -81,10 +84,23 @@ class AuthApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+public function deleteAccount(Request $request)
+{
+    $user = $request->user();
+
+    // ✅ Optional but recommended (logout from all devices)
+    $user->tokens()->delete();
+
+    // ✅ This will auto-delete data from ALL tables
+    // jahan user_id foreign key me cascade laga hai
+    $user->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Account and all related data deleted successfully',
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -178,4 +194,7 @@ class AuthApiController extends Controller
         ], 500);
     }
 }
+
+
+
 }

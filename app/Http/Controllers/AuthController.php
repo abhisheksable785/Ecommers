@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -135,6 +137,91 @@ class AuthController extends Controller
         // 
 
 
+    }
+
+    public function sendResetOTP(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $otp = rand(100000, 999999);
+
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'token' => $otp,
+                'created_at' => Carbon::now()
+            ]
+        );
+
+        Mail::raw(
+            "Your OTP for password reset is: $otp\n\nThis OTP is valid for 5 minutes.\n\nIf you did not request this, ignore this email.",
+            function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject("Password Reset OTP");
+            }
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP sent to your email'
+        ]);
+    }
+
+    // ✅ VERIFY OTP (WITH 5 MINUTE EXPIRY)
+    public function verifyOTP(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required'
+        ]);
+
+        $record = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->where('token', $request->otp)
+            ->first();
+
+        if (!$record) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid OTP'
+            ], 400);
+        }
+
+        // ✅ OTP Expiry: 5 minutes
+        if (Carbon::parse($record->created_at)->addMinutes(5)->isPast()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP expired'
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP verified'
+        ]);
+    }
+
+    // ✅ RESET PASSWORD
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        DB::table('password_resets')->where('email', $request->email)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password changed successfully'
+        ]);
     }
 
     public function logout(Request $request)
