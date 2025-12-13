@@ -59,6 +59,7 @@ class ReviewController extends Controller
     public function store(Request $request, $productId)
     {
         $userId = auth()->id();
+        $user = auth()->user();
 
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
@@ -99,6 +100,13 @@ class ReviewController extends Controller
                 ]);
             }
         }
+        if ($user->onesignal_player_id) {
+                \App\Helpers\OneSignalHelper::sendToUser(
+                    $user->onesignal_player_id,
+                    "Your  Fedback Send!",
+                    "Thank You for Your FeedBack!"
+                );
+            }
 
         return response()->json(['success' => true, 'message' => 'Review submitted', 'review' => $review]);
     }
