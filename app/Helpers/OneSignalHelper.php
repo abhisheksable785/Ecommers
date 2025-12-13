@@ -55,7 +55,7 @@ class OneSignalHelper
         $payload["chrome_web_image"] = $imageUrl;
         $payload["ios_attachments"] = ["id" => $imageUrl];
     }
-
+    
     // URL click redirect
     if ($url) {
         $payload["url"] = $url;

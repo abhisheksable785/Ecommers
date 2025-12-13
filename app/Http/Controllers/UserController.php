@@ -32,6 +32,41 @@ public function savePlayerId(Request $request)
     ]);
 }
 
+public function syncOneSignal(Request $request)
+    {
+        $request->validate([
+            'onesignal_id' => 'required|string',
+        ]);
+
+        $user = $request->user();
+        $user->onesignal_id = $request->onesignal_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OneSignal ID synced successfully',
+        ]);
+    }
+
+    // ✅ Toggle notification ON/OFF
+    public function toggleNotification(Request $request)
+    {
+        $request->validate([
+            'notifications' => 'required|boolean',
+        ]);
+
+        $user = $request->user();
+        $user->notifications = $request->notifications;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification status updated',
+            'notifications' => $user->notifications,
+        ]);
+    }
+
+
 
 
 }

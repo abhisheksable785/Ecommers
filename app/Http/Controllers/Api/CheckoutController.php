@@ -97,7 +97,7 @@ class CheckoutController extends Controller
             
             if ($user->onesignal_player_id) {
                 \App\Helpers\OneSignalHelper::sendToUser(
-                    $user->onesignal_player_id,
+                      $user->id, 
                     "Order Placed Successfully 🛒",
                     "Your order {$order->order_number} is confirmed! Total: ₹{$order->total_amount}"
                 );
@@ -215,9 +215,9 @@ class CheckoutController extends Controller
     }
     
     AddToBag::where('user_id', $userId)->delete();
-    if ($user->onesignal_player_id) {
+    if ( $user->onesignal_player_id) {
                 \App\Helpers\OneSignalHelper::sendToUser(
-                    $user->onesignal_player_id,
+                      $user->id, 
                     "Order Placed Successfully 🛒",
                     "Your order {$order->order_number} is confirmed! Total: ₹{$order->total_amount}"
                 );
