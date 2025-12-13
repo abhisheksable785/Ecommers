@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->decimal('price_at_purchase', 10, 2);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('tbl_product');
         });
     }
