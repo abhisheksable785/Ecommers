@@ -43,6 +43,9 @@ public function profile()
 {
     return $this->belongsTo(Profile::class);
 }
-
-
+public function shippingAddress()
+{
+    return $this->hasMany(Address::class);   
 }
+
+}   
