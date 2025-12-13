@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AddToCardController;
 use App\Http\Controllers\Api\CheckoutController as ApiCheckoutController;
@@ -27,6 +28,14 @@ Route::controller(AuthController::class)->group(function () {
 
 });
 
+Route::post('/forgot-password', [AuthController::class, 'sendResetOTP']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOTP']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
+
+Route::get('/admin/notifications/send', [NotificationController::class, 'create'])->name('admin.notifications');
+Route::post('/admin/notifications/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
+
 
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthApiController::class, 'logout']);
@@ -50,8 +59,15 @@ Route::get('/category-product-list/{id}', [ProductController::class, 'getProduct
 Route::get('/product-list', [ProductController::class, 'apiIndex']);
 
 // Route::get('/profile-list', [profileController::class, 'apiIndex']);
-
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/user/onesignal-sync', [UserController::class, 'syncOneSignal']);
+    Route::post('/user/notification-toggle', [UserController::class, 'toggleNotification']);
+
+});
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post("user/delete-account", [AuthApiController::class, "deleteAccount"]);
     Route::post('/legal/accept', [ApiLegalController::class, 'acceptTerms']);
     Route::post('/legal/check', [ApiLegalController::class, 'checkTerms']);
 
@@ -87,11 +103,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('product/{productId}/can-review', [ReviewController::class, 'canReview']);
     Route::post('product/{productId}/review', [ReviewController::class, 'store']);
     Route::delete('product/{productId}/review', [ReviewController::class, 'destroy']);
-
-
     Route::post("/save-player-id", [UserController::class, "savePlayerId"]);
 });
-
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/address/add', [AddressController::class, 'store']);
